@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { AuthContextType, AuthProviderProps, RegistrationData, Role, UserData } from "../types/auth.types";
 import { getUserProfile, loginUser, logoutUser, registerUser, saveUserToServer } from "../services/authService";
+import { useLocation } from "react-router-dom";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -26,6 +27,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setLoading(false);
     }
   }, []);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    setError(null);
+  }, [location]);
 
   const fetchUserProfile = async (): Promise<void> => {
     try {

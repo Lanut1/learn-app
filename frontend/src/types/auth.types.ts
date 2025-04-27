@@ -27,20 +27,7 @@ export interface RegistrationData {
   address?: string;
   specialization?: string;
   password: string;
-
 };
-
-// export interface RegisterData {
-//   email: string;
-//   password: string;
-//   firstName: string;
-//   lastName: string;
-//   role: 'student' | 'trainer';
-//   specializationId?: string;
-//   dateOfBirth?: Date | null;
-//   address?: string;
-//   [key: string]: any;
-// }
 
 export interface AuthContextType {
   currentUser: UserData | null;

@@ -125,7 +125,10 @@ const theme = createTheme({
     },
     h5: {
       fontSize: '1.125rem',
-      fontWeight: 600,
+      lineHeight: '1.875rem',
+      color: '#171A1F',
+      fontWeight: 400,
+      fontFamily: fonts.body
     },
     h6: {
       fontSize: '1rem',

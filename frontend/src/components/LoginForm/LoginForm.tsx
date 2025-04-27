@@ -10,91 +10,35 @@ import {
   InputAdornment,
   IconButton,
   Alert,
-  CircularProgress,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useAuth } from '../../context/authContext';
-
-interface LoginFormData {
-  email: string;
-  password: string;
-  rememberMe: boolean;
-}
-
-interface FormErrors {
-  email?: string;
-  password?: string;
-}
+import FullPageLoader from '../PageLoading/PageLoading';
+import { useForm } from 'react-hook-form';
+import { LoginCredentials } from '../../types/auth.types';
+import { loginSchema } from '../../validators/loginValidator';
+import { joiResolver } from '@hookform/resolvers/joi';
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
-  const { login, loading: authLoading } = useAuth();
-  const [formData, setFormData] = useState<LoginFormData>({
-    email: '',
-    password: '',
-    rememberMe: false
-  });
-  const [errors, setErrors] = useState<FormErrors>({});
+  const { login, loading, error } = useAuth();
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [loginError, setLoginError] = useState<string>('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const { name, value, checked } = e.target;
-    const newValue = name === 'rememberMe' ? checked : value;
-    
-    setFormData({
-      ...formData,
-      [name]: newValue,
-    });
-    
-    if (errors[name as keyof FormErrors]) {
-      setErrors({
-        ...errors,
-        [name]: undefined,
-      });
-    }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginCredentials>({
+    resolver: joiResolver(loginSchema),
+  });
+
+  const onSubmit = async (data: LoginCredentials) => {
+    const user = await login(data.email, data.password);
+    if (user) navigate('/my-account');
   };
 
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
-    
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
-    }
-    
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
-    e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
-    
-    setIsLoading(true);
-    setLoginError('');
-    
-    try {
-      await login(formData.email, formData.password);
-      navigate('/my-account');
-    } catch (error: any) {
-      setLoginError(error.message || 'Login failed. Please check your credentials.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const toggleShowPassword = (): void => {
-    setShowPassword(!showPassword);
+  const toggleShowPassword = () => {
+    setShowPassword((prev) => !prev);
   };
 
   return (
@@ -109,25 +53,25 @@ const LoginForm: React.FC = () => {
             </Typography>
           </Box>
 
-          {loginError && (
+          {error && (
             <Alert severity="error" sx={{ mb: 3 }}>
-              {loginError}
+              {error}
             </Alert>
           )}
 
-          <form onSubmit={handleSubmit}>
+          {loading && <FullPageLoader/>}
+
+          <form onSubmit={handleSubmit(onSubmit)}>
             <TextField
               fullWidth
               id="email"
-              name="email"
               label="Email"
               variant="outlined"
               margin="normal"
-              value={formData.email}
-              onChange={handleChange}
+              {...register('email')}
               error={!!errors.email}
-              helperText={errors.email}
-              disabled={isLoading || authLoading}
+              helperText={errors.email?.message}
+              disabled={ loading }
               slotProps={{
                 input: {
                   startAdornment: (
@@ -142,16 +86,14 @@ const LoginForm: React.FC = () => {
             <TextField
               fullWidth
               id="password"
-              name="password"
               label="Password"
               type={showPassword ? 'text' : 'password'}
               variant="outlined"
               margin="normal"
-              value={formData.password}
-              onChange={handleChange}
+              {...register('password')}
               error={!!errors.password}
-              helperText={errors.password}
-              disabled={isLoading || authLoading}
+              helperText={errors.password?.message}
+              disabled={loading}
               slotProps={{
                 input: {
                   startAdornment: (
@@ -180,10 +122,10 @@ const LoginForm: React.FC = () => {
               variant="contained"
               color="primary"
               size="large"
-              disabled={isLoading || authLoading}
+              disabled={loading}
               sx={{ mt: 2, mb: 3, py: 1.5 }}
             >
-              {isLoading || authLoading ? <CircularProgress size={24} color="inherit" /> : 'Sign In'}
+              Sign In
             </Button>
 
             <Typography variant="body2" color="text.primary" sx={{ display: 'flex', alignItems: 'center', justifyContent: "center", mb: 2, mx: "auto" }}>

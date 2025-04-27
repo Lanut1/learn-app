@@ -8,6 +8,7 @@ import {
   Button,
   Container,
   MenuItem,
+  Alert,
 } from "@mui/material";
 import { useState } from "react";
 import { RegistrationData, Role } from "../../types/auth.types";
@@ -15,6 +16,8 @@ import { useAuth } from "../../context/authContext";
 import { isTrainer } from "../../utils/isTrainer";
 import { DatePicker } from "@mui/x-date-pickers";
 import { SPECIALIZATIONS } from "./utils";
+import FullPageLoader from "../PageLoading/PageLoading";
+import SuccessRegistration, { SubmittedData } from "../RegistrationSuccess/RegistrationSuccess";
 
 const schemaMap = {
   student: studentSchema,
@@ -33,33 +36,24 @@ export const RegistrationForm = ({ variant }: { variant: Role }) => {
   });
 
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const {register: authRegister} = useAuth();
+  const [submittedData, setSubmittedData] = useState<SubmittedData | null>(null);
+  const {register: authRegister, error, loading} = useAuth();
 
   const onSubmit = async (data: RegistrationData) => {
-    setError(null);
-    console.log("hello from on")
+    const result = await authRegister({ ...data }, variant);
 
-    try {
-      const result = await authRegister({ ...data }, variant);
-      if (result) setSubmitted(true);
-    } catch (err: any) {
-      console.error("Register error:", err);
-      setError(err.message || "Registration failed");
+    if (result) {
+      setSubmitted(true);
+      setSubmittedData({
+        username: data.email.split('@')[0],
+        password: data.password,
+      });
     }
   };
 
   const isTrainerVariant = isTrainer(variant);
 
-  if (submitted) {
-    return (
-      <Box textAlign="center" mt={4}>
-        <Typography variant="h5" gutterBottom>
-          {isTrainerVariant ? "Trainer" : "Student"} registered successfully!
-        </Typography>
-      </Box>
-    );
-  }
+  if (submitted && submittedData) return <SuccessRegistration submittedData={submittedData}/>
 
   return (
     <>
@@ -80,6 +74,7 @@ export const RegistrationForm = ({ variant }: { variant: Role }) => {
             borderRadius: 1.5
           }}
         />
+        {loading && <FullPageLoader/>}
         <form onSubmit={handleSubmit(onSubmit)} style={{
           display: "flex",
           flexDirection: "column",
@@ -87,6 +82,11 @@ export const RegistrationForm = ({ variant }: { variant: Role }) => {
           flexGrow: 1
         }}>
           <Box sx={{display: "flex", flexDirection: "column"}}>
+            {error && (
+              <Alert severity="error" sx={{ mb: 3 }}>
+                {error}
+              </Alert>
+            )}
             <TextField
               label="First Name"
               fullWidth
@@ -176,16 +176,9 @@ export const RegistrationForm = ({ variant }: { variant: Role }) => {
             )}
           </Box>
 
-
           <Button type="submit" variant="contained" size="large" fullWidth>
             Submit
           </Button>
-
-          {error && (
-            <Typography color="error" mt={1}>
-              {error}
-            </Typography>
-          )}
         </form>
       </Box>
     </Container>
