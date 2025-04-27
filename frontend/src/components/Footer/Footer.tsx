@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import {
   Box,
-  Container,
-  Grid,
   Typography,
   Link,
-  TextField,
   Button,
   Divider,
   IconButton,
@@ -13,17 +10,12 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
-  InputAdornment,
-  useMediaQuery,
-  useTheme,
   InputBase
 } from '@mui/material';
 import {
   Facebook as FacebookIcon,
   Twitter as TwitterIcon,
-  Instagram as InstagramIcon,
   LinkedIn as LinkedInIcon,
-  Send as SendIcon,
   EmailOutlined
 } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router-dom';
@@ -31,8 +23,6 @@ import { Link as RouterLink } from 'react-router-dom';
 const Footer: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [language, setLanguage] = useState<string>('en');
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setEmail(e.target.value);

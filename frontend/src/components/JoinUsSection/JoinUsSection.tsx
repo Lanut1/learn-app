@@ -1,4 +1,5 @@
 import { Box, Button, Typography } from "@mui/material";
+import { Link as RouterLink } from 'react-router-dom';
 
 const JoinUsSection: React.FC = () => {
   return (
@@ -90,7 +91,9 @@ const JoinUsSection: React.FC = () => {
       <Typography variant="body1" color="text.primary" sx={{ mb: 3, maxWidth: '40%', textAlign: 'center' }}>
         Qui ut exercitation officia proident enim non tempor tempor ipsum ex nulla ea adipisicing sit consequat enim elit cupidatat o
       </Typography>
-      <Button 
+      <Button
+        component={RouterLink}
+        to="/join-us"
         variant="contained" 
         color="primary"
         sx={{ fontSize: '0.875rem', lineHeight: '1.375rem'}}

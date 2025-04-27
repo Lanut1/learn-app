@@ -1,4 +1,4 @@
-import { RegisterData, UserData } from "../types/auth.types";
+import { RegistrationData, Role, UserData } from "../types/auth.types";
 
 export interface ApiError {
   status?: number;
@@ -123,59 +123,15 @@ interface RegisterResponse {
   lastName: string;
   username: string;
   isActive: boolean;
-  role: 'student' | 'trainer';
+  role: Role;
   registrationMessage: string;
 }
 
-export const registerUser = async (userData: RegisterData): Promise<RegisterResponse> => {
+export const registerUser = async (userData: RegistrationData, role: Role = 'student'): Promise<RegisterResponse> => {
   try {
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    if (!userData.email || !/\S+@\S+\.\S+/.test(userData.email)) {
-      const error: ApiError = {
-        status: 400,
-        message: 'Invalid email address',
-        code: 'INVALID_EMAIL_FORMAT'
-      };
-      throw error;
-    }
-    
-    if (!userData.password || userData.password.length < 6) {
-      const error: ApiError = {
-        status: 400,
-        message: 'Password must be at least 6 characters',
-        code: 'INVALID_PASSWORD_FORMAT'
-      };
-      throw error;
-    }
-    
-    if (!userData.firstName || !userData.lastName) {
-      const error: ApiError = {
-        status: 400,
-        message: 'First name and last name are required',
-        code: 'MISSING_REQUIRED_FIELDS'
-      };
-      throw error;
-    }
-    if (userData.role !== 'student' && userData.role !== 'trainer') {
-      const error: ApiError = {
-        status: 400,
-        message: 'Invalid role. Must be either "student" or "trainer"',
-        code: 'INVALID_ROLE'
-      };
-      throw error;
-    }
-    
-    if (userData.role === 'trainer' && !userData.specializationId) {
-      const error: ApiError = {
-        status: 400,
-        message: 'Specialization is required for trainers',
-        code: 'MISSING_SPECIALIZATION'
-      };
-      throw error;
-    }
-    
-    // Mock successful registration
+    console.log("helloFromRegisterUser")
+
     const username = userData.email.split('@')[0];
     
     return {
@@ -185,7 +141,7 @@ export const registerUser = async (userData: RegisterData): Promise<RegisterResp
       lastName: userData.lastName,
       username: username,
       isActive: true,
-      role: userData.role,
+      role: role,
       registrationMessage: 'Registration successful! You can now log in.'
     };
   } catch (error) {

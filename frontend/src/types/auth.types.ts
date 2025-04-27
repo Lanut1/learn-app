@@ -5,15 +5,7 @@ export interface LoginCredentials {
   password: string;
 }
 
-export interface AuthError {
-  errorCode: number;
-  message: string;
-}
-
-export interface ValidationErrors {
-  email?: string;
-  password?: string;
-}
+export type Role = "student" | "trainer";
 
 export interface UserData {
   id: string;
@@ -23,21 +15,32 @@ export interface UserData {
   username: string;
   photo?: string;
   isActive: boolean;
-  role: 'student' | 'trainer';
+  role: Role;
   [key: string]: any;
 }
 
-export interface RegisterData {
-  email: string;
-  password: string;
+export interface RegistrationData {
   firstName: string;
   lastName: string;
-  role: 'student' | 'trainer';
-  specializationId?: string;
-  dateOfBirth?: Date | null;
+  email: string;
+  dob?: string;
   address?: string;
-  [key: string]: any;
-}
+  specialization?: string;
+  password: string;
+
+};
+
+// export interface RegisterData {
+//   email: string;
+//   password: string;
+//   firstName: string;
+//   lastName: string;
+//   role: 'student' | 'trainer';
+//   specializationId?: string;
+//   dateOfBirth?: Date | null;
+//   address?: string;
+//   [key: string]: any;
+// }
 
 export interface AuthContextType {
   currentUser: UserData | null;
@@ -46,7 +49,7 @@ export interface AuthContextType {
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<UserData | undefined>;
   logout: () => Promise<void>;
-  register: (userData: RegisterData) => Promise<any>;
+  register: (userData: RegistrationData, role?: Role) => Promise<any>;
   updateUserData: (newUserData: Partial<UserData>) => void;
 }
 

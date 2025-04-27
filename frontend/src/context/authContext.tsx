@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { AuthContextType, AuthProviderProps, RegisterData, UserData } from "../types/auth.types";
+import { AuthContextType, AuthProviderProps, RegistrationData, Role, UserData } from "../types/auth.types";
 import { getUserProfile, loginUser, logoutUser, registerUser, saveUserToServer } from "../services/authService";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -73,11 +73,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const register = async (userData: RegisterData): Promise<any> => {
+  const register = async (userData: RegistrationData, role: Role = 'student'): Promise<any> => {
     try {
       setLoading(true);
       setError(null);
-      const response = await registerUser(userData);
+      const response = await registerUser(userData, role);
       return response;
     } catch (error: any) {
       console.error('Register error:', error);

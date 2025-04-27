@@ -145,6 +145,13 @@ const theme = createTheme({
       fontWeight: 600,
       color: '#6b7280'
     },
+    subtitle1: {
+      fontSize: '1.125rem',
+      lineHeight: '1.75rem',
+      fontFamily: fonts.body,
+      fontWeight: 400,
+      color: '#6b7280'
+    },
     button: {
       fontFamily: fonts.body,
       fontWeight: 500,
