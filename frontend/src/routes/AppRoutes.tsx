@@ -6,6 +6,7 @@ import HomePage from "../pages/HomePage";
 import AboutPage from "../pages/AboutPage";
 import JoinUsPage from "../pages/JoinUsPage";
 import { RegistrationForm } from "../components/RegistrationForm/RegistrationForm";
+import BlogPage from "../pages/BlogPage";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -17,6 +18,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/join-us" element={<JoinUsPage />} />
         <Route path="/registration/trainer" element={<RegistrationForm variant="trainer" />} />
         <Route path="/registration/student" element={<RegistrationForm variant="student" />} />
+        <Route path="/blog" element={<BlogPage/>} />
 
         <Route element={<PrivateRoute />}>
           {/* <Route path="/my-account" element={<MyAccount />} />
