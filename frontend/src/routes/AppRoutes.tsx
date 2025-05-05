@@ -7,6 +7,7 @@ import AboutPage from "../pages/AboutPage";
 import JoinUsPage from "../pages/JoinUsPage";
 import { RegistrationForm } from "../components/RegistrationForm/RegistrationForm";
 import BlogPage from "../pages/BlogPage";
+import MyAccountPage from "../pages/MyAccountPage";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -21,8 +22,8 @@ const AppRoutes: React.FC = () => {
         <Route path="/blog" element={<BlogPage/>} />
 
         <Route element={<PrivateRoute />}>
-          {/* <Route path="/my-account" element={<MyAccount />} />
-          <Route path="/training" element={<Training />} />
+          <Route path="/my-account" element={<MyAccountPage />} />
+          {/* <Route path="/training" element={<Training />} />
           <Route path="/change-password" element={<ChangePassword />} /> */}
         </Route>
         {/* <Route path="*" element={<NotFound />} /> */}

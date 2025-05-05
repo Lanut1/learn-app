@@ -74,6 +74,9 @@ export const loginUser = async (email: string, password: string): Promise<LoginR
         photo: undefined,
         isActive: true,
         role: 'student',
+        dob: "10/27/1998",
+        address: "Belgrade, Mike Alasa 19",
+        trainers: [{name: "Elizabeth Lopez", specialization: "PHP"}, {name: "John Down", specialization: "Java Script"}],
         token: 'mock-token-student'
       };
     } else if (email === 'trainer@example.com' && password === 'password') {
@@ -86,6 +89,9 @@ export const loginUser = async (email: string, password: string): Promise<LoginR
         photo: undefined,
         isActive: true,
         role: 'trainer',
+        address: "Belgrade, Mike Alasa 19",
+        specialization: "Java",
+        students: [{name: "Anna Ivanova", isActive: true}, {name: "Peter Smith", isActive: false}],
         token: 'mock-token-trainer'
       };
     } else {
@@ -130,7 +136,6 @@ interface RegisterResponse {
 export const registerUser = async (userData: RegistrationData, role: Role = 'student'): Promise<RegisterResponse> => {
   try {
     await new Promise(resolve => setTimeout(resolve, 1000));
-    console.log("helloFromRegisterUser")
 
     const username = userData.email.split('@')[0];
     
