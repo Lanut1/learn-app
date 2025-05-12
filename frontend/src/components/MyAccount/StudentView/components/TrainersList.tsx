@@ -24,7 +24,7 @@ const TrainersList: React.FC<TrainersListProps> = ({ trainers }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {trainers.map((trainer, index) => (
+            {trainers?.map((trainer, index) => (
               <TableRow key={index}>
                 <TableCell sx={{ fontWeight: "bold" }}>
                   {trainer.name}

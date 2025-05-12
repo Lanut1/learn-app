@@ -47,6 +47,7 @@ export const RegistrationForm = ({ variant }: { variant: Role }) => {
       setSubmittedData({
         username: data.email.split('@')[0],
         password: data.password,
+        email: data.email
       });
     }
   };

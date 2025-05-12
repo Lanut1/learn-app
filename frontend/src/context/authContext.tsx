@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { AuthContextType, AuthProviderProps, RegistrationData, Role, UserData } from "../types/auth.types";
-import { getUserProfile, loginUser, logoutUser, registerUser, saveUserToServer } from "../services/authService";
+import { getUserProfile, loginUser, logoutUser, registerUser, saveUserToServer, updatePassword } from "../services/authService";
 import { useLocation } from "react-router-dom";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -19,35 +19,48 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [error, setError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
+  const profileFetched = useRef(false); 
+
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      fetchUserProfile();
-    } else {
+    const initializeAuth = async () => {
+      setLoading(true);
+      const token = localStorage.getItem('token');
+
+      if (token && !profileFetched.current) {
+        try {
+          await fetchUserProfile();
+          profileFetched.current = true;
+          setIsAuthenticated(true);
+        } catch (err) {
+          console.error("Failed to fetch user profile:", err);
+          localStorage.removeItem('token');
+          setIsAuthenticated(false);
+        }
+      } else {
+        console.log("Token missing OR profile already fetched...");
+      }
+
       setLoading(false);
-    }
+    };
+
+    initializeAuth();
   }, []);
+
+  const fetchUserProfile = async (): Promise<void> => {
+    try {
+      const userData = await getUserProfile();
+      setCurrentUser(userData);
+    } catch (error) {
+      console.error("Error in fetchUserProfile:", error);
+      throw error;
+    }
+  };
 
   const location = useLocation();
 
   useEffect(() => {
     setError(null);
   }, [location]);
-
-  const fetchUserProfile = async (): Promise<void> => {
-    try {
-      setLoading(true);
-      const userData = await getUserProfile();
-      setCurrentUser(userData);
-      setIsAuthenticated(true);
-    } catch (error) {
-      console.error('Failed to fetch user profile:', error);
-      localStorage.removeItem('token');
-      setIsAuthenticated(false);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const login = async (email: string, password: string): Promise<UserData | undefined> => {
     try {
@@ -72,6 +85,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       await logoutUser();
       localStorage.removeItem('token');
       setCurrentUser(null);
+      profileFetched.current = false;
       setIsAuthenticated(false);
     } catch (error: any) {
       console.error('Logout error:', error);
@@ -93,6 +107,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setLoading(false);
     }
   };
+
+  const changePassword = async (currentPassword: string, newPassword: string, confirmPassword: string): Promise<any> => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await updatePassword(currentPassword, newPassword, confirmPassword);
+      return response;
+    } catch (error: any) {
+      console.error('Change password error:', error);
+      setError(error.message || 'Failed to change password');
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const updateUserData = async (
     newUserData: Partial<UserData>
@@ -117,6 +145,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     login,
     logout,
     register,
+    changePassword,
     updateUserData,
   };
 

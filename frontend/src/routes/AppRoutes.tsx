@@ -8,6 +8,7 @@ import JoinUsPage from "../pages/JoinUsPage";
 import { RegistrationForm } from "../components/RegistrationForm/RegistrationForm";
 import BlogPage from "../pages/BlogPage";
 import MyAccountPage from "../pages/MyAccountPage";
+import ChangePasswordPage from "../pages/ChangePasswordPage";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -23,6 +24,7 @@ const AppRoutes: React.FC = () => {
 
         <Route element={<PrivateRoute />}>
           <Route path="/my-account" element={<MyAccountPage />} />
+          <Route path="/my-account/change-password" element={<ChangePasswordPage />} />
           {/* <Route path="/training" element={<Training />} />
           <Route path="/change-password" element={<ChangePassword />} /> */}
         </Route>

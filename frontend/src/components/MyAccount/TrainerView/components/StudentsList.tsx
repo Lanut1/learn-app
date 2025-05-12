@@ -28,7 +28,7 @@ const StudentsList: React.FC<StudentsListProps> = ({ students }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {students.map((student, index) => (
+            {students?.map((student, index) => (
               <TableRow
                 key={index}
               >

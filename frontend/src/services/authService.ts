@@ -94,6 +94,21 @@ export const loginUser = async (email: string, password: string): Promise<LoginR
         students: [{name: "Anna Ivanova", isActive: true}, {name: "Peter Smith", isActive: false}],
         token: 'mock-token-trainer'
       };
+    } else if (email === '12345@gmail.com' && password === "Hello12345!") {
+      return {
+        id: 'user-2',
+        email: '12345@gmail.com',
+        firstName: 'Anna',
+        lastName: 'Smith',
+        username: 'anasmith',
+        photo: undefined,
+        isActive: true,
+        role: 'trainer',
+        address: "Belgrade, Mike Alasa 19",
+        specialization: "Java",
+        students: [{name: "Anna Ivanova", isActive: true}, {name: "Peter Smith", isActive: false}],
+        token: 'mock-token-trainer'
+      }
     } else {
       const error: ApiError = {
         status: 401,
@@ -165,7 +180,7 @@ export interface UpdatePasswordResponse {
   message: string;
 }
 
-export const updatePassword = async (currentPassword: string, newPassword: string): Promise<UpdatePasswordResponse> => {
+export const updatePassword = async (currentPassword: string, newPassword: string, confirmPassword: string): Promise<UpdatePasswordResponse> => {
   try {
     await new Promise(resolve => setTimeout(resolve, 800));
     
@@ -174,6 +189,15 @@ export const updatePassword = async (currentPassword: string, newPassword: strin
         status: 400,
         message: 'Current password is incorrect',
         code: 'INVALID_PASSWORD'
+      };
+      throw error;
+    }
+
+    if (newPassword !== confirmPassword) {
+      const error: ApiError = {
+        status: 400,
+        message: 'Passwords do not match',
+        code: 'INVALID_PASSWORD_FORMAT'
       };
       throw error;
     }
