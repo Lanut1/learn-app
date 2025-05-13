@@ -1,6 +1,6 @@
 import { Controller, useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
-import { studentSchema, trainerSchema } from "../../validators/registrationValidator";
+
 import {
   TextField,
   Box,
@@ -11,13 +11,15 @@ import {
   Alert,
 } from "@mui/material";
 import { useState } from "react";
-import { RegistrationData, Role } from "../../types/auth.types";
-import { useAuth } from "../../context/authContext";
-import { isTrainer } from "../../utils/isTrainer";
+
+import SuccessRegistration, { SubmittedData } from "../RegistrationSuccess/RegistrationSuccess";
+import { studentSchema, trainerSchema } from "../../../validators/registrationValidator";
+import { RegistrationData, Role } from "../../../types/auth.types";
+import { useAuth } from "../../../context/authContext";
+import { isTrainer } from "../../../utils/isTrainer";
+import FullPageLoader from "../../PageLoading/PageLoading";
 import { DatePicker } from "@mui/x-date-pickers";
 import { SPECIALIZATIONS } from "./utils";
-import FullPageLoader from "../PageLoading/PageLoading";
-import SuccessRegistration, { SubmittedData } from "../RegistrationSuccess/RegistrationSuccess";
 
 const schemaMap = {
   student: studentSchema,

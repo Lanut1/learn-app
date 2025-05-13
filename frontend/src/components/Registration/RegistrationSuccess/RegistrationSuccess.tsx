@@ -2,7 +2,7 @@ import React from "react";
 import { Avatar, Box, Button, Container, Typography } from "@mui/material";
 import { Check } from "@mui/icons-material";
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { useAuth } from "../../context/authContext";
+import { useAuth } from "../../../context/authContext";
 
 export interface SubmittedData {
   username: string;

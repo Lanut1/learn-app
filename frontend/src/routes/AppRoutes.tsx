@@ -5,10 +5,11 @@ import LoginPage from "../pages/LoginPage";
 import HomePage from "../pages/HomePage";
 import AboutPage from "../pages/AboutPage";
 import JoinUsPage from "../pages/JoinUsPage";
-import { RegistrationForm } from "../components/RegistrationForm/RegistrationForm";
+
 import BlogPage from "../pages/BlogPage";
 import MyAccountPage from "../pages/MyAccountPage";
 import ChangePasswordPage from "../pages/ChangePasswordPage";
+import { RegistrationForm } from "../components/Registration/RegistrationForm/RegistrationForm";
 
 const AppRoutes: React.FC = () => {
   return (

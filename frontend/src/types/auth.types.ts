@@ -39,6 +39,7 @@ export interface AuthContextType {
   register: (userData: RegistrationData, role?: Role) => Promise<any>;
   updateUserData: (newUserData: Partial<UserData>) => void;
   changePassword: (currentPassword: string, newPassword: string, confirmPassword: string) => Promise<any>;
+  deleteAccount: () => Promise<void>;
 }
 
 export interface AuthProviderProps {

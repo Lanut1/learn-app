@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { AuthContextType, AuthProviderProps, RegistrationData, Role, UserData } from "../types/auth.types";
-import { getUserProfile, loginUser, logoutUser, registerUser, saveUserToServer, updatePassword } from "../services/authService";
+import { deleteUserAccount, getUserProfile, loginUser, logoutUser, registerUser, saveUserToServer, updatePassword } from "../services/authService";
 import { useLocation } from "react-router-dom";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -137,6 +137,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const deleteAccount = async (): Promise<void> => {
+    try {
+      setLoading(true);
+      const response = await deleteUserAccount();
+      if (response.success) {
+        console.log(response.message);
+        localStorage.removeItem('token');
+        setCurrentUser(null);
+        profileFetched.current = false;
+        setIsAuthenticated(false);
+      } else {
+        throw new Error(response.message || 'Failed to delete account');
+      }
+    } catch (error: any) {
+      console.error('Error deleting account:', error);
+      setError(error.message || 'Failed to delete account');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const value: AuthContextType = {
     currentUser,
     loading,
@@ -147,6 +168,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     register,
     changePassword,
     updateUserData,
+    deleteAccount,
   };
 
   return (
