@@ -1,5 +1,6 @@
 import React from "react";
 import { Typography, Box, Button, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper } from "@mui/material";
+import {Link as RouterLink} from "react-router-dom";
 
 interface TrainersListProps {
   trainers: Array<{ name: string; specialization: string }>;
@@ -12,7 +13,7 @@ const TrainersList: React.FC<TrainersListProps> = ({ trainers }) => {
         <Typography variant="h3">
           My Trainers
         </Typography>
-        <Button variant="contained" size="large" >Add trainer</Button>
+        <Button variant="contained" size="large" component={RouterLink} to="/my-account/add-trainer" >Add trainer</Button>
       </Box>
 
       <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: 0, border: 1, borderColor: "background.muted" }}>

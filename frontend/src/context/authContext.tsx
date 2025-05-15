@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { AuthContextType, AuthProviderProps, RegistrationData, Role, UserData } from "../types/auth.types";
-import { deleteUserAccount, getUserProfile, loginUser, logoutUser, registerUser, saveUserToServer, updatePassword } from "../services/authService";
+import { deleteUserAccount, getUserProfile, loginUser, logoutUser, registerUser, saveUserToServer, updatePassword } from "../services/auth.service";
 import { useLocation } from "react-router-dom";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);

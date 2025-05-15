@@ -12,6 +12,7 @@ import ChangePasswordPage from "../pages/ChangePasswordPage";
 import { RegistrationForm } from "../components/Registration/RegistrationForm/RegistrationForm";
 
 import EditProfilePage from "../pages/EditProfilePage";
+import AddTrainerPage from "../pages/AddTrainerPage";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -29,7 +30,7 @@ const AppRoutes: React.FC = () => {
           <Route path="/my-account" element={<MyAccountPage />} />
           <Route path="/my-account/change-password" element={<ChangePasswordPage />} />
           <Route path="/my-account/edit-profile" element={<EditProfilePage/>} />
-          {/* <Route path="/training" element={<Training />} /> */}
+          <Route path="/my-account/add-trainer" element={<AddTrainerPage />} />
         </Route>
         {/* <Route path="*" element={<NotFound />} /> */}
       </Route>
