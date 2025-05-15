@@ -16,6 +16,7 @@ import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { getTrainingsForTrainer, Training } from "../../../services/trainings.service";
 import { Link as RouterLink } from "react-router-dom";
+import FullPageLoader from "../../PageLoading/PageLoading";
 
 const StudentTrainingView: React.FC = () => {
   const [trainings, setTrainings] = useState<Training[]>([]);
@@ -24,15 +25,23 @@ const StudentTrainingView: React.FC = () => {
   const [specializationFilter, setSpecializationFilter] = useState("");
   const [fromDate, setFromDate] = useState<Dayjs | null>(null);
   const [toDate, setToDate] = useState<Dayjs | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchTrainings = async () => {
-      const data = await getTrainingsForTrainer();
-      setTrainings(data);
-      setFilteredTrainings(data);
-    };
+    try {
+      setLoading(true);
+      const fetchTrainings = async () => {
+        const data = await getTrainingsForTrainer();
+        setTrainings(data);
+        setFilteredTrainings(data);
+      };
 
-    fetchTrainings();
+      fetchTrainings();
+    } catch (error) {
+      console.error("Failed to fetch trainings:", error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const handleSearch = () => {
@@ -68,6 +77,8 @@ const StudentTrainingView: React.FC = () => {
 
     setFilteredTrainings(result);
   };
+
+  if (loading) return <FullPageLoader/>;
 
   return (
     <Box>

@@ -3,6 +3,7 @@ import { Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, Ta
 import { DatePicker } from "@mui/x-date-pickers";
 import { getTrainingsForTrainer, Training } from "../../../services/trainings.service";
 import dayjs, { Dayjs } from "dayjs";
+import FullPageLoader from "../../PageLoading/PageLoading";
 
 const TrainerTrainingView: React.FC = () => {
   const [trainings, setTrainings] = useState<Training[]>([]);
@@ -10,14 +11,22 @@ const TrainerTrainingView: React.FC = () => {
   const [fromDate, setFromDate] = useState<Dayjs | null>(null);
   const [toDate, setToDate] = useState<Dayjs | null>(null);
   const [nameFilter, setNameFilter] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchTrainings = async () => {
-      const data = await getTrainingsForTrainer();
-      setTrainings(data);
-      setFilteredTrainings(data);
-    };
-    fetchTrainings();
+    try {
+      setLoading(true);
+      const fetchTrainings = async () => {
+        const data = await getTrainingsForTrainer();
+        setTrainings(data);
+        setFilteredTrainings(data);
+      };
+      fetchTrainings();
+    } catch (error) {
+      console.error("Failed to fetch trainings:", error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const handleSearch = () => {
@@ -39,6 +48,8 @@ const TrainerTrainingView: React.FC = () => {
 
     setFilteredTrainings(result);
   };
+
+  if (loading) return <FullPageLoader/>;
 
   return (
     <Box>
