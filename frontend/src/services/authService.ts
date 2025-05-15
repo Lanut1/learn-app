@@ -34,7 +34,7 @@ export const getUserProfile = async (): Promise<UserData> => {
         isActive: true,
         role: 'trainer',
         specializationId: 'type-1',
-        specialization: 'Fitness'
+        specialization: 'frontend'
       };
     }
 
@@ -90,7 +90,7 @@ export const loginUser = async (email: string, password: string): Promise<LoginR
         isActive: true,
         role: 'trainer',
         address: "Belgrade, Mike Alasa 19",
-        specialization: "Java",
+        specialization: "frontend",
         students: [{name: "Anna Ivanova", isActive: true}, {name: "Peter Smith", isActive: false}],
         token: 'mock-token-trainer'
       };
@@ -105,7 +105,7 @@ export const loginUser = async (email: string, password: string): Promise<LoginR
         isActive: true,
         role: 'trainer',
         address: "Belgrade, Mike Alasa 19",
-        specialization: "Java",
+        specialization: "backend",
         students: [{name: "Anna Ivanova", isActive: true}, {name: "Peter Smith", isActive: false}],
         token: 'mock-token-trainer'
       }

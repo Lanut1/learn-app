@@ -17,7 +17,7 @@ import {
 import { Menu as MenuIcon, Close as CloseIcon } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router-dom';
 import { useAuth } from '../../context/authContext';
-import MiniProfile from '../MiniProfile/MiniProfile';
+import MiniProfile from './MiniProfile/MiniProfile';
 
 
 const Header: React.FC = () => {

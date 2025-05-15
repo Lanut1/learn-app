@@ -19,7 +19,7 @@ const AccountActions = () => {
   return (
     <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}} my={5}>
       <Box sx={{display: "flex", gap: 2}}>
-        <Button variant="contained" size="large">
+        <Button variant="contained" size="large" component={RouterLink} to="/my-account/edit-profile">
           Edit profile
         </Button>
         <Button

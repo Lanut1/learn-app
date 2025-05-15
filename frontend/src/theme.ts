@@ -168,11 +168,6 @@ const theme = createTheme({
     borderRadius: 8,
   },
   components: {
-    MuiCssBaseline: {
-      styleOverrides: `
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
-      `,
-    },
     MuiButton: {
       styleOverrides: {
         root: {
