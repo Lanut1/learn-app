@@ -1,12 +1,29 @@
 import { Breadcrumbs, Link, Typography } from "@mui/material";
 
-const BreadcrumbsNavigation = ({currentPage = "Add Trainer"}: {currentPage?: string} ) => {
+export interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+const defaultBreadcrumbItems: BreadcrumbItem[] = [
+  { label: "My Account", href: "/my-account" },
+  { label: "Add Trainer" },
+];
+
+const BreadcrumbsNavigation = ({ breadcrumbItems = defaultBreadcrumbItems }: { breadcrumbItems?: BreadcrumbItem[] }) => {
   return (
     <Breadcrumbs sx={{ mb: 3 }}>
-      <Link underline="hover" color="inherit" href="/my-account">
-        My Account
-      </Link>
-      <Typography color="text.primary">{currentPage}</Typography>
+      {breadcrumbItems.map((item, index) =>
+        item.href ? (
+          <Link key={index} underline="hover" color="inherit" href={item.href}>
+            {item.label}
+          </Link>
+        ) : (
+          <Typography key={index} color="text.primary">
+            {item.label}
+          </Typography>
+        )
+      )}
     </Breadcrumbs>
   );
 };
