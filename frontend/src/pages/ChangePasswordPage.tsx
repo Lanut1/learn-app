@@ -6,14 +6,15 @@ import ChangePasswordSuccess from "../components/MyAccount/ChangePasswordForm/Ch
 
 const ChangePasswordPage: React.FC = () => {
   const { changePassword, error, loading } = useAuth();
-  const [passwordChangeSuccess, setPasswordChangeSuccess] = useState<boolean>(false);
+  const [passwordChangeSuccess, setPasswordChangeSuccess] =
+    useState<boolean>(false);
 
   const onSubmit = async (data: ChangePasswordInputs) => {
     try {
       const result = await changePassword(
         data.currentPassword,
         data.newPassword,
-        data.confirmPassword
+        data.confirmPassword,
       );
 
       if (result) setPasswordChangeSuccess(true);
@@ -26,9 +27,13 @@ const ChangePasswordPage: React.FC = () => {
   return (
     <>
       {passwordChangeSuccess ? (
-        <ChangePasswordSuccess/>
+        <ChangePasswordSuccess />
       ) : (
-        <ChangePasswordForm onSubmit={onSubmit} loading={loading} error={error} />
+        <ChangePasswordForm
+          onSubmit={onSubmit}
+          loading={loading}
+          error={error}
+        />
       )}
     </>
   );

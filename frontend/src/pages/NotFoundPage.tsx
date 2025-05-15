@@ -20,12 +20,7 @@ const NotFoundPage: React.FC = () => {
       <Typography variant="body1" mb={4} color="text.secondary">
         Sorry, the page you're looking for doesn't exist or has been moved.
       </Typography>
-      <Button
-        variant="contained"
-        size="large"
-        component={RouterLink}
-        to="/"
-      >
+      <Button variant="contained" size="large" component={RouterLink} to="/">
         Go to Home
       </Button>
     </Box>

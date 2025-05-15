@@ -7,7 +7,7 @@ export const changePasswordSchema = Joi.object({
   }),
   newPassword: passwordValidation,
   confirmPassword: Joi.string()
-    .valid(Joi.ref('newPassword'))
+    .valid(Joi.ref("newPassword"))
     .required()
     .messages({
       "any.only": "Passwords do not match",

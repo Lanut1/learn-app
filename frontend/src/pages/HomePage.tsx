@@ -6,9 +6,9 @@ import WelcomeBackSection from "../components/WelcomeBackSection/WelcomeBackSect
 import { useAuth } from "../context/authContext";
 
 const HomePage: React.FC = () => {
-  const {isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
 
-  if (loading) return (<FullPageLoader/>)
+  if (loading) return <FullPageLoader />;
 
   return (
     <>

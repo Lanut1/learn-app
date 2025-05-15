@@ -10,7 +10,11 @@ const defaultBreadcrumbItems: BreadcrumbItem[] = [
   { label: "Add Trainer" },
 ];
 
-const BreadcrumbsNavigation = ({ breadcrumbItems = defaultBreadcrumbItems }: { breadcrumbItems?: BreadcrumbItem[] }) => {
+const BreadcrumbsNavigation = ({
+  breadcrumbItems = defaultBreadcrumbItems,
+}: {
+  breadcrumbItems?: BreadcrumbItem[];
+}) => {
   return (
     <Breadcrumbs sx={{ mb: 3 }}>
       {breadcrumbItems.map((item, index) =>
@@ -22,7 +26,7 @@ const BreadcrumbsNavigation = ({ breadcrumbItems = defaultBreadcrumbItems }: { b
           <Typography key={index} color="text.primary">
             {item.label}
           </Typography>
-        )
+        ),
       )}
     </Breadcrumbs>
   );

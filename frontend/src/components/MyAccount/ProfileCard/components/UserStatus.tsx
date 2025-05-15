@@ -18,8 +18,10 @@ const UserStatus: React.FC<StatusProps> = ({ isActive }) => {
       >
         {isActive ? (
           <>
-            <CheckCircleOutlineIcon sx={{ color: "success.main", marginRight: 1 }} />
-            <Typography variant="h6" sx={{ color: "success.main"}}>
+            <CheckCircleOutlineIcon
+              sx={{ color: "success.main", marginRight: 1 }}
+            />
+            <Typography variant="h6" sx={{ color: "success.main" }}>
               Active
             </Typography>
           </>

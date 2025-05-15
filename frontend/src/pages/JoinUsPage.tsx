@@ -3,14 +3,14 @@ import JoinUsCard from "../components/JoinUsCard/JoinUsCard";
 
 const JoinUsPage: React.FC = () => {
   return (
-    <Container sx={{display: 'flex', flexDirection: 'column', gap: 9 }}>
-      <Typography variant="h1" sx={{textAlign: 'center'}}>
+    <Container sx={{ display: "flex", flexDirection: "column", gap: 9 }}>
+      <Typography variant="h1" sx={{ textAlign: "center" }}>
         Join Us
       </Typography>
-      <JoinUsCard variant="trainer"/>
-      <JoinUsCard variant="student"/>
+      <JoinUsCard variant="trainer" />
+      <JoinUsCard variant="student" />
     </Container>
-  )
-}
+  );
+};
 
 export default JoinUsPage;

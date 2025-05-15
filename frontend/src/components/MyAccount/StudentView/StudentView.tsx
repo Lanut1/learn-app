@@ -11,8 +11,15 @@ interface StudentViewProps {
 
 const StudentView: React.FC<StudentViewProps> = ({ user }) => {
   return (
-    <Box sx={{display: "flex", justifyContent: "flex-start", alignItems: "flex-start", gap: 5}}>
-      <ProfileCard user={user} isTrainer={false}/>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "flex-start",
+        alignItems: "flex-start",
+        gap: 5,
+      }}
+    >
+      <ProfileCard user={user} isTrainer={false} />
       <TrainersList trainers={user.trainers} />
     </Box>
   );

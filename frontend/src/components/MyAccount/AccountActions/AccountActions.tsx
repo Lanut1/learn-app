@@ -1,6 +1,16 @@
-import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from "react-router-dom";
 import { useAuth } from "../../../context/authContext";
 import FullPageLoader from "../../PageLoading/PageLoading";
 
@@ -17,14 +27,26 @@ const AccountActions = () => {
   };
 
   return (
-    <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}} my={5}>
-      <Box sx={{display: "flex", gap: 2}}>
-        <Button variant="contained" size="large" component={RouterLink} to="/my-account/edit-profile">
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+      my={5}
+    >
+      <Box sx={{ display: "flex", gap: 2 }}>
+        <Button
+          variant="contained"
+          size="large"
+          component={RouterLink}
+          to="/my-account/edit-profile"
+        >
           Edit profile
         </Button>
         <Button
           color="success"
-          sx={{color: "background.paper"}}
+          sx={{ color: "background.paper" }}
           variant="contained"
           size="large"
           component={RouterLink}
@@ -33,17 +55,22 @@ const AccountActions = () => {
           Change Password
         </Button>
       </Box>
-      <Button color="error" variant="contained" size="large" onClick={handleOpen}>
+      <Button
+        color="error"
+        variant="contained"
+        size="large"
+        onClick={handleOpen}
+      >
         Delete profile
       </Button>
-    
+
       {error && (
         <Alert severity="error" sx={{ m: 3 }}>
           {error}
         </Alert>
       )}
 
-      {loading && <FullPageLoader/>}
+      {loading && <FullPageLoader />}
 
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
@@ -54,16 +81,20 @@ const AccountActions = () => {
         <DialogContent>
           <DialogContentText>
             <Typography variant="body2" mb={2}>
-              We're truly sorry to see you go. Before you proceed with deleting your profile, we want you 
-              to know that this action is permanent and irreversible. You'll lose access to all your 
-              account information, course progress, certificates, and any learning communities you're a part of.
+              We're truly sorry to see you go. Before you proceed with deleting
+              your profile, we want you to know that this action is permanent
+              and irreversible. You'll lose access to all your account
+              information, course progress, certificates, and any learning
+              communities you're a part of.
             </Typography>
             <Typography variant="body2">
-              If there's anything we can do to improve your experience or if you need assistance with any 
-              issues you've encountered, please reach out to our support team. We're always here to help. 
+              If there's anything we can do to improve your experience or if you
+              need assistance with any issues you've encountered, please reach
+              out to our support team. We're always here to help.
             </Typography>
             <Typography variant="body2" mt={2}>
-              If you still wish to delete your account, please click on the 'Confirm' button below.
+              If you still wish to delete your account, please click on the
+              'Confirm' button below.
             </Typography>
           </DialogContentText>
         </DialogContent>
@@ -77,7 +108,7 @@ const AccountActions = () => {
         </DialogActions>
       </Dialog>
     </Box>
-  )
-}
+  );
+};
 
 export default AccountActions;

@@ -17,7 +17,7 @@ import { getUserTrainers } from "../services/trainers.service";
 import { addTraining } from "../services/trainings.service";
 import FullPageLoader from "../components/PageLoading/PageLoading";
 import BreadcrumbsNavigation from "../components/Breadcrumbs/Breadcrumbs";
-import { Link as RouterLink} from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
 const AddTrainingPage: React.FC = () => {
   const { currentUser, loading } = useAuth();
@@ -31,13 +31,14 @@ const AddTrainingPage: React.FC = () => {
   const [description, setDescription] = useState("");
   const [selectedTrainer, setSelectedTrainer] = useState<string | null>(null);
 
-
   const [trainers, setTrainers] = useState<string[]>([]);
   const [loadingTrainers, setLoadingTrainers] = useState(true);
 
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success",
+  );
 
   useEffect(() => {
     const fetchTrainers = async () => {
@@ -162,19 +163,29 @@ const AddTrainingPage: React.FC = () => {
                 Add trainers
               </Typography>
               {loadingTrainers ? (
-                <Typography color="text.secondary">Loading trainers...</Typography>
+                <Typography color="text.secondary">
+                  Loading trainers...
+                </Typography>
               ) : (
                 <Autocomplete
                   options={trainers}
                   value={selectedTrainer}
                   onChange={(event, newValue) => setSelectedTrainer(newValue)}
-                  renderInput={(params) => <TextField {...params} label="Trainer" />}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Trainer" />
+                  )}
                 />
               )}
             </Box>
 
             <Box display="flex" justifyContent="space-between" mt={3}>
-              <Button variant="contained" color="error" size="large" component={RouterLink} to="/my-account/trainings">
+              <Button
+                variant="contained"
+                color="error"
+                size="large"
+                component={RouterLink}
+                to="/my-account/trainings"
+              >
                 Cancel
               </Button>
               <Button

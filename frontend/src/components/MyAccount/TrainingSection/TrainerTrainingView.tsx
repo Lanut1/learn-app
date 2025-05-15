@@ -1,7 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Paper } from "@mui/material";
+import {
+  Box,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Paper,
+} from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
-import { getTrainingsForTrainer, Training } from "../../../services/trainings.service";
+import {
+  getTrainingsForTrainer,
+  Training,
+} from "../../../services/trainings.service";
 import dayjs, { Dayjs } from "dayjs";
 import FullPageLoader from "../../PageLoading/PageLoading";
 
@@ -34,22 +48,32 @@ const TrainerTrainingView: React.FC = () => {
 
     if (nameFilter) {
       result = result.filter((training) =>
-        training.participantName.toLowerCase().includes(nameFilter.toLowerCase())
+        training.participantName
+          .toLowerCase()
+          .includes(nameFilter.toLowerCase()),
       );
     }
 
     if (fromDate) {
-      result = result.filter((training) => dayjs(training.date, "DD.MM.YYYY").isAfter(fromDate) || dayjs(training.date, "DD.MM.YYYY").isSame(fromDate));
+      result = result.filter(
+        (training) =>
+          dayjs(training.date, "DD.MM.YYYY").isAfter(fromDate) ||
+          dayjs(training.date, "DD.MM.YYYY").isSame(fromDate),
+      );
     }
 
     if (toDate) {
-      result = result.filter((training) => dayjs(training.date, "DD.MM.YYYY").isBefore(toDate) || dayjs(training.date, "DD.MM.YYYY").isSame(toDate));
+      result = result.filter(
+        (training) =>
+          dayjs(training.date, "DD.MM.YYYY").isBefore(toDate) ||
+          dayjs(training.date, "DD.MM.YYYY").isSame(toDate),
+      );
     }
 
     setFilteredTrainings(result);
   };
 
-  if (loading) return <FullPageLoader/>;
+  if (loading) return <FullPageLoader />;
 
   return (
     <Box>
@@ -70,7 +94,6 @@ const TrainerTrainingView: React.FC = () => {
           value={toDate}
           onChange={(date) => setToDate(date)}
         />
-
       </Box>
       <Button variant="contained" onClick={handleSearch} size="large">
         Search

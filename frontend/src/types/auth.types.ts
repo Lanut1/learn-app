@@ -52,7 +52,7 @@ export interface RegistrationData {
   address?: string;
   specialization?: string;
   password: string;
-};
+}
 
 export interface AuthContextType {
   currentUser: UserData | null;
@@ -63,7 +63,11 @@ export interface AuthContextType {
   logout: () => Promise<void>;
   register: (userData: RegistrationData, role?: Role) => Promise<any>;
   updateUserData: (newUserData: Partial<UserData>) => void;
-  changePassword: (currentPassword: string, newPassword: string, confirmPassword: string) => Promise<any>;
+  changePassword: (
+    currentPassword: string,
+    newPassword: string,
+    confirmPassword: string,
+  ) => Promise<any>;
   deleteAccount: () => Promise<void>;
 }
 

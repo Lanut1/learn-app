@@ -1,15 +1,10 @@
-import React, { useState, useRef } from 'react';
-import { 
-  Box, 
-  IconButton, 
-  Typography,
-  CircularProgress
-} from '@mui/material';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import PauseIcon from '@mui/icons-material/Pause';
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import VolumeOffIcon from '@mui/icons-material/VolumeOff';
-import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import React, { useState, useRef } from "react";
+import { Box, IconButton, Typography, CircularProgress } from "@mui/material";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
+import VolumeUpIcon from "@mui/icons-material/VolumeUp";
+import VolumeOffIcon from "@mui/icons-material/VolumeOff";
+import FullscreenIcon from "@mui/icons-material/Fullscreen";
 
 interface VideoPlayerProps {
   src: string;
@@ -29,8 +24,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   autoPlay = false,
   muted = true,
   loop = false,
-  aspectRatio = '16/9',
-  height = 'auto'
+  aspectRatio = "16/9",
+  height = "auto",
 }) => {
   const [isPlaying, setIsPlaying] = useState(autoPlay);
   const [isMuted, setIsMuted] = useState(muted);
@@ -77,16 +72,16 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   return (
     <Box
       sx={{
-        position: 'relative',
-        width: '100%',
+        position: "relative",
+        width: "100%",
         height: height,
         aspectRatio: aspectRatio,
         borderRadius: 2,
-        overflow: 'hidden',
-        bgcolor: '#000',
-        '&:hover .video-controls': {
-          opacity: 1
-        }
+        overflow: "hidden",
+        bgcolor: "#000",
+        "&:hover .video-controls": {
+          opacity: 1,
+        },
       }}
       onMouseEnter={() => setShowControls(true)}
       onMouseLeave={() => setShowControls(false)}
@@ -102,25 +97,25 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         onLoadedData={handleLoadedData}
         onEnded={handleEnded}
         style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          borderRadius: '8px'
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          borderRadius: "8px",
         }}
       />
 
       {isLoading && (
         <Box
           sx={{
-            position: 'absolute',
+            position: "absolute",
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            bgcolor: 'rgba(0, 0, 0, 0.3)'
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            bgcolor: "rgba(0, 0, 0, 0.3)",
           }}
         >
           <CircularProgress color="primary" />
@@ -131,27 +126,27 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         <Box
           onClick={togglePlay}
           sx={{
-            position: 'absolute',
+            position: "absolute",
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            bgcolor: 'rgba(0, 0, 0, 0.3)'
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            bgcolor: "rgba(0, 0, 0, 0.3)",
           }}
         >
           <IconButton
             sx={{
               width: 80,
               height: 80,
-              color: 'white',
-              bgcolor: 'rgba(0, 0, 0, 0.5)',
-              '&:hover': {
-                bgcolor: 'primary.main'
-              }
+              color: "white",
+              bgcolor: "rgba(0, 0, 0, 0.5)",
+              "&:hover": {
+                bgcolor: "primary.main",
+              },
             }}
           >
             <PlayArrowIcon sx={{ fontSize: 40 }} />
@@ -162,35 +157,35 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       <Box
         className="video-controls"
         sx={{
-          position: 'absolute',
+          position: "absolute",
           bottom: 0,
           left: 0,
           right: 0,
           p: 1,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          bgcolor: 'rgba(0, 0, 0, 0.11)',
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          bgcolor: "rgba(0, 0, 0, 0.11)",
           opacity: showControls || !isPlaying ? 1 : 0,
-          transition: 'opacity 0.3s ease',
+          transition: "opacity 0.3s ease",
           borderBottomLeftRadius: 2,
-          borderBottomRightRadius: 2
+          borderBottomRightRadius: 2,
         }}
       >
         {title && (
-          <Typography variant="body2" color='white'>
+          <Typography variant="body2" color="white">
             {title}
           </Typography>
         )}
         <Box>
-          <IconButton color='primary'  onClick={togglePlay} size="small">
+          <IconButton color="primary" onClick={togglePlay} size="small">
             {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
           </IconButton>
-          
+
           <IconButton color="primary" onClick={toggleMute} size="small">
             {isMuted ? <VolumeOffIcon /> : <VolumeUpIcon />}
           </IconButton>
-          
+
           <IconButton color="primary" onClick={enterFullscreen} size="small">
             <FullscreenIcon />
           </IconButton>

@@ -11,8 +11,15 @@ interface TrainerViewProps {
 
 const TrainerView: React.FC<TrainerViewProps> = ({ user }) => {
   return (
-    <Box sx={{display: "flex", justifyContent: "flex-start", alignItems: "flex-start", gap: 5}}>
-      <ProfileCard user={user} isTrainer/>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "flex-start",
+        alignItems: "flex-start",
+        gap: 5,
+      }}
+    >
+      <ProfileCard user={user} isTrainer />
       <StudentsList students={user.students} />
     </Box>
   );

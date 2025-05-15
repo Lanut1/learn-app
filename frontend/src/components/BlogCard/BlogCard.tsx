@@ -1,4 +1,11 @@
-import { Box, Typography, Card, CardMedia, CardContent, Chip } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Card,
+  CardMedia,
+  CardContent,
+  Chip,
+} from "@mui/material";
 
 interface BlogCardProps {
   image: string;
@@ -8,7 +15,13 @@ interface BlogCardProps {
   duration: number;
 }
 
-const BlogCard: React.FC<BlogCardProps> = ({ image, category, title, date, duration }) => {
+const BlogCard: React.FC<BlogCardProps> = ({
+  image,
+  category,
+  title,
+  date,
+  duration,
+}) => {
   return (
     <Card
       sx={{
@@ -31,20 +44,21 @@ const BlogCard: React.FC<BlogCardProps> = ({ image, category, title, date, durat
         sx={{ objectFit: "cover" }}
       />
       <CardContent sx={{ padding: 2 }}>
-        <Typography
-          variant="body2"
-          sx={{ color: "primary.main" }}
-        >
+        <Typography variant="body2" sx={{ color: "primary.main" }}>
           {category}
         </Typography>
 
-        <Typography
-          variant="h4"
-          gutterBottom
-        >
+        <Typography variant="h4" gutterBottom>
           {title}
         </Typography>
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mt: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mt: 2,
+          }}
+        >
           <Typography variant="body2" color="textSecondary">
             {date}
           </Typography>

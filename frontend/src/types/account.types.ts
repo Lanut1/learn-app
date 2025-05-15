@@ -4,8 +4,8 @@ export type ChangePasswordInputs = {
   confirmPassword: string;
 };
 
-export interface ChangePasswordFormProps{
+export interface ChangePasswordFormProps {
   onSubmit: (data: ChangePasswordInputs) => Promise<void>;
   error?: string | null;
   loading?: boolean;
-};
+}

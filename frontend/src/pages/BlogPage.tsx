@@ -14,39 +14,46 @@ const BlogPage: React.FC = () => {
     <Container
       maxWidth={false}
       sx={{
-        maxWidth: '90%',
-        margin: 'auto',
+        maxWidth: "90%",
+        margin: "auto",
         display: "flex",
         flexDirection: "column",
-        gap: 9
+        gap: 9,
       }}
     >
       <Typography variant="h1" align="center">
         Blog
       </Typography>
 
-      <Box sx={{display: "flex", flexWrap: "wrap", gap: 4, justifyContent: "center"}}>
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 4,
+          justifyContent: "center",
+        }}
+      >
         {BLOGS.slice(0, visibleBlogs).map((blog) => (
-            <BlogCard
-              image={blog.image}
-              category={blog.category}
-              title={blog.title}
-              date={blog.date}
-              duration={blog.duration}
-              key={blog.id}
-            />
+          <BlogCard
+            image={blog.image}
+            category={blog.category}
+            title={blog.title}
+            date={blog.date}
+            duration={blog.duration}
+            key={blog.id}
+          />
         ))}
       </Box>
 
       {visibleBlogs < BLOGS.length && (
-          <Button
-            variant="contained"
-            onClick={handleLoadMore}
-            size="large"
-            sx={{alignSelf: "center"}}
-          >
-            Load more articles
-          </Button>
+        <Button
+          variant="contained"
+          onClick={handleLoadMore}
+          size="large"
+          sx={{ alignSelf: "center" }}
+        >
+          Load more articles
+        </Button>
       )}
     </Container>
   );

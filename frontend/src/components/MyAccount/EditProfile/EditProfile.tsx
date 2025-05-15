@@ -8,7 +8,7 @@ import {
   Avatar,
   Alert,
   MenuItem,
-  Paper
+  Paper,
 } from "@mui/material";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { useForm, Controller } from "react-hook-form";
@@ -18,12 +18,12 @@ import { updateProfileSchema } from "../../../validators/updateProfileValidator"
 import FullPageLoader from "../../PageLoading/PageLoading";
 import { SPECIALIZATIONS } from "../../Registration/RegistrationForm/utils";
 import { useAuth } from "../../../context/authContext";
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from "react-router-dom";
 import dayjs from "dayjs";
 import theme from "../../../theme";
 
 const EditProfile = () => {
-  const { loading, error, updateUserData, currentUser} = useAuth();
+  const { loading, error, updateUserData, currentUser } = useAuth();
 
   const {
     register,
@@ -36,9 +36,11 @@ const EditProfile = () => {
     resolver: joiResolver(updateProfileSchema),
   });
 
-  const [previewPhoto, setPreviewPhoto] = useState<string | null>(currentUser?.photo || null);
+  const [previewPhoto, setPreviewPhoto] = useState<string | null>(
+    currentUser?.photo || null,
+  );
 
-    useEffect(() => {
+  useEffect(() => {
     if (currentUser) {
       reset(currentUser);
       setPreviewPhoto(currentUser.photo || null);
@@ -70,11 +72,23 @@ const EditProfile = () => {
   if (loading) return <FullPageLoader />;
 
   return (
-    <Container maxWidth={false}  sx={{ width: "90%", mx: "auto"}}>
+    <Container maxWidth={false} sx={{ width: "90%", mx: "auto" }}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box sx={{display: "flex", flexDirection: "column", gap: 12, alignItems: "center"}}>
-          <Box sx={{display: "flex", gap: 8, justifyContent: "space-between"}}>
-            <Paper elevation={2} sx={{ padding: 4, borderRadius: 2, maxWidth: "50%" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 12,
+            alignItems: "center",
+          }}
+        >
+          <Box
+            sx={{ display: "flex", gap: 8, justifyContent: "space-between" }}
+          >
+            <Paper
+              elevation={2}
+              sx={{ padding: 4, borderRadius: 2, maxWidth: "50%" }}
+            >
               <Typography variant="h3" gutterBottom>
                 Edit Profile
               </Typography>
@@ -85,21 +99,22 @@ const EditProfile = () => {
                 </Alert>
               )}
 
-              <Box sx={{ display: "flex", flexDirection: "column", gap: 5}}>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 5 }}>
                 <Box sx={{ display: "flex", gap: 3, alignItems: "center" }}>
                   <Avatar
                     alt={currentUser?.firstName}
                     src={previewPhoto || ""}
                     variant="square"
-                    sx={{ 
+                    sx={{
                       width: 160,
                       height: 160,
                       mb: 2,
                       border: `2px solid ${theme.palette.primary.main}`,
-                      borderRadius: 1
+                      borderRadius: 1,
                     }}
                   >
-                    {!previewPhoto && currentUser?.firstName.charAt(0).toUpperCase()}
+                    {!previewPhoto &&
+                      currentUser?.firstName.charAt(0).toUpperCase()}
                   </Avatar>
                   <Box>
                     <Typography variant="body1" gutterBottom>
@@ -149,7 +164,6 @@ const EditProfile = () => {
                   <TextField
                     label="Email"
                     disabled
-
                     margin="normal"
                     {...register("email")}
                   />
@@ -169,7 +183,9 @@ const EditProfile = () => {
                         render={({ field }) => (
                           <DatePicker
                             {...field}
-                            value={field.value ? dayjs(field.value as string) : null}
+                            value={
+                              field.value ? dayjs(field.value as string) : null
+                            }
                             label="Date of Birth (optional)"
                             slotProps={{
                               textField: {
@@ -192,7 +208,7 @@ const EditProfile = () => {
                 </Box>
               </Box>
             </Paper>
-            
+
             {isTrainer && (
               <Controller
                 control={control}
@@ -216,12 +232,21 @@ const EditProfile = () => {
             )}
           </Box>
 
-
           <Box sx={{ display: "flex", gap: 5, mt: 4 }}>
-            <Button size="large" variant="outlined" component={RouterLink} to="/my-account">
+            <Button
+              size="large"
+              variant="outlined"
+              component={RouterLink}
+              to="/my-account"
+            >
               Cancel
             </Button>
-            <Button size="large" type="submit" variant="contained" color="primary">
+            <Button
+              size="large"
+              type="submit"
+              variant="contained"
+              color="primary"
+            >
               Save Changes
             </Button>
           </Box>

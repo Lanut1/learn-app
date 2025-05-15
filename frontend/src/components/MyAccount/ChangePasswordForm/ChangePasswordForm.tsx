@@ -1,16 +1,27 @@
 import {
-  Button, Container, TextField, Typography, Alert,
-  Box
+  Button,
+  Container,
+  TextField,
+  Typography,
+  Alert,
+  Box,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { changePasswordSchema } from "../../../validators/changePasswordValidator";
-import { ChangePasswordFormProps, ChangePasswordInputs } from "../../../types/account.types";
+import {
+  ChangePasswordFormProps,
+  ChangePasswordInputs,
+} from "../../../types/account.types";
 import { LockOutline } from "@mui/icons-material";
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from "react-router-dom";
 import FullPageLoader from "../../PageLoading/PageLoading";
 
-const ChangePasswordForm = ({onSubmit, loading, error}: ChangePasswordFormProps) => {
+const ChangePasswordForm = ({
+  onSubmit,
+  loading,
+  error,
+}: ChangePasswordFormProps) => {
   const {
     register,
     handleSubmit,
@@ -21,18 +32,38 @@ const ChangePasswordForm = ({onSubmit, loading, error}: ChangePasswordFormProps)
 
   return (
     <Container maxWidth="lg">
-      {loading && <FullPageLoader/>}
+      {loading && <FullPageLoader />}
       <Typography variant="h3" mb={8}>
         Security
       </Typography>
-      <Box sx={{display: "flex", justifyContent: "flex-start", alignItems: "flex-start", gap: 4}}>
-        <Typography variant="h5" sx={{display: "flex", alignItems: "center", gap: 1, fontWeight: 600, width: "40%"}}>
-          <LockOutline/>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-start",
+          alignItems: "flex-start",
+          gap: 4,
+        }}
+      >
+        <Typography
+          variant="h5"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            fontWeight: 600,
+            width: "40%",
+          }}
+        >
+          <LockOutline />
           Change Password
         </Typography>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
 
           <TextField
             label="Current Password"
@@ -63,12 +94,10 @@ const ChangePasswordForm = ({onSubmit, loading, error}: ChangePasswordFormProps)
             error={!!errors.confirmPassword}
             helperText={errors.confirmPassword?.message}
           />
-          <Box sx={{display: "flex", justifyContent: "flex-end", gap: 2, mt: 2}}>
-            <Button
-              component={RouterLink}
-              to="/my-account"
-              size="large"
-            >
+          <Box
+            sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 2 }}
+          >
+            <Button component={RouterLink} to="/my-account" size="large">
               Cancel
             </Button>
 
@@ -86,6 +115,6 @@ const ChangePasswordForm = ({onSubmit, loading, error}: ChangePasswordFormProps)
       </Box>
     </Container>
   );
-}
+};
 
 export default ChangePasswordForm;

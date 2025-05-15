@@ -45,7 +45,9 @@ export const getUserTrainers = async (): Promise<Trainer[]> => {
   }
 };
 
-export const addTrainersToUser = async (trainerIds: string[]): Promise<{ success: boolean; addedTrainerIds: string[] }> => {
+export const addTrainersToUser = async (
+  trainerIds: string[],
+): Promise<{ success: boolean; addedTrainerIds: string[] }> => {
   try {
     await new Promise((resolve) => setTimeout(resolve, 800));
 

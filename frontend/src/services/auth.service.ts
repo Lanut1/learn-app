@@ -11,47 +11,47 @@ export interface ApiError {
 // Mock user data - in a real app, this would fetch from the server
 export const getUserProfile = async (): Promise<UserData> => {
   try {
-    await new Promise(resolve => setTimeout(resolve, 700));
-    const token = localStorage.getItem('token');
-    
+    await new Promise((resolve) => setTimeout(resolve, 700));
+    const token = localStorage.getItem("token");
+
     if (!token) {
-      const error: ApiError = { 
-        status: 401, 
-        message: 'Not authenticated',
-        code: 'AUTH_REQUIRED'
+      const error: ApiError = {
+        status: 401,
+        message: "Not authenticated",
+        code: "AUTH_REQUIRED",
       };
       throw error;
     }
-    
-    if (token === 'mock-token-trainer' || token.includes('trainer')) {
+
+    if (token === "mock-token-trainer" || token.includes("trainer")) {
       return {
-        id: 'user-2',
-        email: 'trainer@example.com',
-        firstName: 'Jane',
-        lastName: 'Smith',
-        username: 'janesmith',
+        id: "user-2",
+        email: "trainer@example.com",
+        firstName: "Jane",
+        lastName: "Smith",
+        username: "janesmith",
         photo: undefined,
         isActive: true,
-        role: 'trainer',
-        specializationId: 'type-1',
-        specialization: 'frontend'
+        role: "trainer",
+        specializationId: "type-1",
+        specialization: "frontend",
       };
     }
 
     return {
-      id: 'user-1',
-      email: 'student@example.com',
-      firstName: 'John',
-      lastName: 'Doe',
-      username: 'johndoe',
+      id: "user-1",
+      email: "student@example.com",
+      firstName: "John",
+      lastName: "Doe",
+      username: "johndoe",
       photo: undefined,
       isActive: true,
-      role: 'student',
-      dateOfBirth: '1990-01-01',
-      address: '123 Main St, Anytown, USA'
+      role: "student",
+      dateOfBirth: "1990-01-01",
+      address: "123 Main St, Anytown, USA",
     };
   } catch (error) {
-    console.error('Error fetching user profile:', error);
+    console.error("Error fetching user profile:", error);
     throw error;
   }
 };
@@ -60,65 +60,77 @@ interface LoginResponse extends UserData {
   token?: string;
 }
 
-export const loginUser = async (email: string, password: string): Promise<LoginResponse> => {
+export const loginUser = async (
+  email: string,
+  password: string,
+): Promise<LoginResponse> => {
   try {
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    if (email === 'student@example.com' && password === 'password') {
+    await new Promise((resolve) => setTimeout(resolve, 800));
+
+    if (email === "student@example.com" && password === "password") {
       return {
-        id: 'user-1',
-        email: 'student@example.com',
-        firstName: 'John',
-        lastName: 'Doe',
-        username: 'johndoe',
+        id: "user-1",
+        email: "student@example.com",
+        firstName: "John",
+        lastName: "Doe",
+        username: "johndoe",
         photo: undefined,
         isActive: true,
-        role: 'student',
+        role: "student",
         dob: "10/27/1998",
         address: "Belgrade, Mike Alasa 19",
-        trainers: [{name: "Elizabeth Lopez", specialization: "PHP"}, {name: "John Down", specialization: "Java Script"}],
-        token: 'mock-token-student'
+        trainers: [
+          { name: "Elizabeth Lopez", specialization: "PHP" },
+          { name: "John Down", specialization: "Java Script" },
+        ],
+        token: "mock-token-student",
       };
-    } else if (email === 'trainer@example.com' && password === 'password') {
+    } else if (email === "trainer@example.com" && password === "password") {
       return {
-        id: 'user-2',
-        email: 'trainer@example.com',
-        firstName: 'Jane',
-        lastName: 'Smith',
-        username: 'janesmith',
+        id: "user-2",
+        email: "trainer@example.com",
+        firstName: "Jane",
+        lastName: "Smith",
+        username: "janesmith",
         photo: undefined,
         isActive: true,
-        role: 'trainer',
+        role: "trainer",
         address: "Belgrade, Mike Alasa 19",
         specialization: "frontend",
-        students: [{name: "Anna Ivanova", isActive: true}, {name: "Peter Smith", isActive: false}],
-        token: 'mock-token-trainer'
+        students: [
+          { name: "Anna Ivanova", isActive: true },
+          { name: "Peter Smith", isActive: false },
+        ],
+        token: "mock-token-trainer",
       };
-    } else if (email === '12345@gmail.com' && password === "Hello12345!") {
+    } else if (email === "12345@gmail.com" && password === "Hello12345!") {
       return {
-        id: 'user-2',
-        email: '12345@gmail.com',
-        firstName: 'Anna',
-        lastName: 'Smith',
-        username: 'anasmith',
+        id: "user-2",
+        email: "12345@gmail.com",
+        firstName: "Anna",
+        lastName: "Smith",
+        username: "anasmith",
         photo: undefined,
         isActive: true,
-        role: 'trainer',
+        role: "trainer",
         address: "Belgrade, Mike Alasa 19",
         specialization: "backend",
-        students: [{name: "Anna Ivanova", isActive: true}, {name: "Peter Smith", isActive: false}],
-        token: 'mock-token-trainer'
-      }
+        students: [
+          { name: "Anna Ivanova", isActive: true },
+          { name: "Peter Smith", isActive: false },
+        ],
+        token: "mock-token-trainer",
+      };
     } else {
       const error: ApiError = {
         status: 401,
-        message: 'Invalid email or password',
-        code: 'INVALID_CREDENTIALS'
+        message: "Invalid email or password",
+        code: "INVALID_CREDENTIALS",
       };
       throw error;
     }
   } catch (error) {
-    console.error('Login error:', error);
+    console.error("Login error:", error);
     throw error;
   }
 };
@@ -129,10 +141,10 @@ interface LogoutResponse {
 
 export const logoutUser = async (): Promise<LogoutResponse> => {
   try {
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 500));
     return { success: true };
   } catch (error) {
-    console.error('Logout error:', error);
+    console.error("Logout error:", error);
     throw error;
   }
 };
@@ -148,12 +160,15 @@ interface RegisterResponse {
   registrationMessage: string;
 }
 
-export const registerUser = async (userData: RegistrationData, role: Role = 'student'): Promise<RegisterResponse> => {
+export const registerUser = async (
+  userData: RegistrationData,
+  role: Role = "student",
+): Promise<RegisterResponse> => {
   try {
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    const username = userData.email.split('@')[0];
-    
+    const username = userData.email.split("@")[0];
+
     return {
       id: `user-${Math.floor(Math.random() * 1000)}`,
       email: userData.email,
@@ -162,10 +177,10 @@ export const registerUser = async (userData: RegistrationData, role: Role = 'stu
       username: username,
       isActive: true,
       role: role,
-      registrationMessage: 'Registration successful! You can now log in.'
+      registrationMessage: "Registration successful! You can now log in.",
     };
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error("Registration error:", error);
     throw error;
   }
 };
@@ -180,15 +195,19 @@ export interface UpdatePasswordResponse {
   message: string;
 }
 
-export const updatePassword = async (currentPassword: string, newPassword: string, confirmPassword: string): Promise<UpdatePasswordResponse> => {
+export const updatePassword = async (
+  currentPassword: string,
+  newPassword: string,
+  confirmPassword: string,
+): Promise<UpdatePasswordResponse> => {
   try {
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    if (currentPassword !== 'password') {
+    await new Promise((resolve) => setTimeout(resolve, 800));
+
+    if (currentPassword !== "password") {
       const error: ApiError = {
         status: 400,
-        message: 'Current password is incorrect',
-        code: 'INVALID_PASSWORD'
+        message: "Current password is incorrect",
+        code: "INVALID_PASSWORD",
       };
       throw error;
     }
@@ -196,24 +215,24 @@ export const updatePassword = async (currentPassword: string, newPassword: strin
     if (newPassword !== confirmPassword) {
       const error: ApiError = {
         status: 400,
-        message: 'Passwords do not match',
-        code: 'INVALID_PASSWORD_FORMAT'
+        message: "Passwords do not match",
+        code: "INVALID_PASSWORD_FORMAT",
       };
       throw error;
     }
-    
+
     if (!newPassword || newPassword.length < 6) {
       const error: ApiError = {
         status: 400,
-        message: 'New password must be at least 6 characters',
-        code: 'INVALID_PASSWORD_FORMAT'
+        message: "New password must be at least 6 characters",
+        code: "INVALID_PASSWORD_FORMAT",
       };
       throw error;
     }
-    
-    return { success: true, message: 'Password updated successfully' };
+
+    return { success: true, message: "Password updated successfully" };
   } catch (error) {
-    console.error('Error updating password:', error);
+    console.error("Error updating password:", error);
     throw error;
   }
 };
@@ -230,29 +249,31 @@ export type UpdateUserProfileResponse = UserData & {
   updatedAt: string;
 };
 
-export const updateUserProfile = async (userData: UpdateUserProfileRequest): Promise<UpdateUserProfileResponse> => {
+export const updateUserProfile = async (
+  userData: UpdateUserProfileRequest,
+): Promise<UpdateUserProfileResponse> => {
   try {
-    await new Promise(resolve => setTimeout(resolve, 900));
+    await new Promise((resolve) => setTimeout(resolve, 900));
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
       const error: ApiError = {
         status: 401,
-        message: 'Not authenticated',
-        code: 'AUTH_REQUIRED'
+        message: "Not authenticated",
+        code: "AUTH_REQUIRED",
       };
       throw error;
     }
-  
+
     const currentUserData = await getUserProfile();
-    
+
     return {
       ...currentUserData,
       ...userData,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
   } catch (error) {
-    console.error('Error updating user profile:', error);
+    console.error("Error updating user profile:", error);
     throw error;
   }
 };
@@ -267,26 +288,28 @@ export interface UploadUserPhotoResponse {
   message: string;
 }
 
-export const uploadUserPhoto = async (photoData: string): Promise<UploadUserPhotoResponse> => {
+export const uploadUserPhoto = async (
+  photoData: string,
+): Promise<UploadUserPhotoResponse> => {
   try {
-    await new Promise(resolve => setTimeout(resolve, 1200));
-    
+    await new Promise((resolve) => setTimeout(resolve, 1200));
+
     if (!photoData) {
       const error: ApiError = {
         status: 400,
-        message: 'Photo data is required',
-        code: 'MISSING_PHOTO_DATA'
+        message: "Photo data is required",
+        code: "MISSING_PHOTO_DATA",
       };
       throw error;
     }
-    
+
     return {
       success: true,
       photo: `https://example.com/photos/${Date.now()}.jpg`,
-      message: 'Photo uploaded successfully'
+      message: "Photo uploaded successfully",
     };
   } catch (error) {
-    console.error('Error uploading user photo:', error);
+    console.error("Error uploading user photo:", error);
     throw error;
   }
 };
@@ -296,63 +319,66 @@ export interface DeleteUserAccountResponse {
   message: string;
 }
 
-export const deleteUserAccount = async (): Promise<DeleteUserAccountResponse> => {
-  try {
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    const token = localStorage.getItem('token');
-    if (!token) {
-      const error: ApiError = {
-        status: 401,
-        message: 'Not authenticated',
-        code: 'AUTH_REQUIRED'
-      };
-      throw error;
-    }
-    
-    return { success: true, message: 'Account deleted successfully' };
-  } catch (error) {
-    console.error('Error deleting user account:', error);
-    throw error;
-  }
-};
+export const deleteUserAccount =
+  async (): Promise<DeleteUserAccountResponse> => {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 800));
 
-export const saveUserToServer = async (userData: Partial<UserData>): Promise<UserData> => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        const error: ApiError = {
+          status: 401,
+          message: "Not authenticated",
+          code: "AUTH_REQUIRED",
+        };
+        throw error;
+      }
+
+      return { success: true, message: "Account deleted successfully" };
+    } catch (error) {
+      console.error("Error deleting user account:", error);
+      throw error;
+    }
+  };
+
+export const saveUserToServer = async (
+  userData: Partial<UserData>,
+): Promise<UserData> => {
   try {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    const token = localStorage.getItem('token');
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    const token = localStorage.getItem("token");
     if (!token) {
       const error: ApiError = {
         status: 401,
-        message: 'Not authenticated',
-        code: 'AUTH_REQUIRED'
+        message: "Not authenticated",
+        code: "AUTH_REQUIRED",
       };
       throw error;
     }
-    
+
     const currentUserData = await getUserProfile();
-    
+
     if (userData.email && !/\S+@\S+\.\S+/.test(userData.email)) {
       const error: ApiError = {
         status: 400,
-        message: 'Invalid email format',
-        code: 'INVALID_EMAIL_FORMAT'
+        message: "Invalid email format",
+        code: "INVALID_EMAIL_FORMAT",
       };
       throw error;
     }
-    
+
     const updatedUser: UserData & { updatedAt: string } = {
       ...currentUserData,
       ...userData,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
-    
-    console.log('User data saved to server:', updatedUser);
-    
+
+    console.log("User data saved to server:", updatedUser);
+
     return updatedUser;
   } catch (error) {
-    console.error('Error saving user to server:', error);
+    console.error("Error saving user to server:", error);
     throw error;
   }
 };

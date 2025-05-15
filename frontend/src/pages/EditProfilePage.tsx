@@ -1,6 +1,6 @@
-import React from 'react';
-import { Box, Typography } from '@mui/material';
-import EditProfile from '../components/MyAccount/EditProfile/EditProfile';
+import React from "react";
+import { Box, Typography } from "@mui/material";
+import EditProfile from "../components/MyAccount/EditProfile/EditProfile";
 
 const EditProfilePage: React.FC = () => {
   return (

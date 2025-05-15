@@ -5,7 +5,9 @@ import { useAuth } from "../context/authContext";
 import { isTrainer } from "../utils/isTrainer";
 import TrainerTrainingView from "../components/MyAccount/TrainingSection/TrainerTrainingView";
 import StudentTrainingView from "../components/MyAccount/TrainingSection/StudentTrainingView";
-import BreadcrumbsNavigation, { BreadcrumbItem } from "../components/Breadcrumbs/Breadcrumbs";
+import BreadcrumbsNavigation, {
+  BreadcrumbItem,
+} from "../components/Breadcrumbs/Breadcrumbs";
 
 const breadcrumbItems: BreadcrumbItem[] = [
   { label: "My Account", href: "/my-account" },
@@ -19,10 +21,9 @@ const TrainingsPage: React.FC = () => {
 
   if (loading) return <FullPageLoader />;
 
-
   return (
     <Box mx={12}>
-      <BreadcrumbsNavigation breadcrumbItems={breadcrumbItems}/>
+      <BreadcrumbsNavigation breadcrumbItems={breadcrumbItems} />
       <Typography variant="h1" align="center" mb={5}>
         Trainings
       </Typography>

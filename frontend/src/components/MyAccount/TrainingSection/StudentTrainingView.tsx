@@ -14,7 +14,10 @@ import {
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
-import { getTrainingsForTrainer, Training } from "../../../services/trainings.service";
+import {
+  getTrainingsForTrainer,
+  Training,
+} from "../../../services/trainings.service";
 import { Link as RouterLink } from "react-router-dom";
 import FullPageLoader from "../../PageLoading/PageLoading";
 
@@ -49,13 +52,17 @@ const StudentTrainingView: React.FC = () => {
 
     if (trainerNameFilter) {
       result = result.filter((training) =>
-        training.participantName.toLowerCase().includes(trainerNameFilter.toLowerCase())
+        training.participantName
+          .toLowerCase()
+          .includes(trainerNameFilter.toLowerCase()),
       );
     }
 
     if (specializationFilter) {
       result = result.filter((training) =>
-        training.trainingName.toLowerCase().includes(specializationFilter.toLowerCase())
+        training.trainingName
+          .toLowerCase()
+          .includes(specializationFilter.toLowerCase()),
       );
     }
 
@@ -63,7 +70,7 @@ const StudentTrainingView: React.FC = () => {
       result = result.filter(
         (training) =>
           dayjs(training.date, "DD.MM.YYYY").isAfter(fromDate, "day") ||
-          dayjs(training.date, "DD.MM.YYYY").isSame(fromDate, "day")
+          dayjs(training.date, "DD.MM.YYYY").isSame(fromDate, "day"),
       );
     }
 
@@ -71,18 +78,23 @@ const StudentTrainingView: React.FC = () => {
       result = result.filter(
         (training) =>
           dayjs(training.date, "DD.MM.YYYY").isBefore(toDate, "day") ||
-          dayjs(training.date, "DD.MM.YYYY").isSame(toDate, "day")
+          dayjs(training.date, "DD.MM.YYYY").isSame(toDate, "day"),
       );
     }
 
     setFilteredTrainings(result);
   };
 
-  if (loading) return <FullPageLoader/>;
+  if (loading) return <FullPageLoader />;
 
   return (
     <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={4}
+      >
         <Button
           variant="contained"
           color="success"
@@ -99,7 +111,13 @@ const StudentTrainingView: React.FC = () => {
         <Typography variant="h3" mb={2}>
           Search Trainings
         </Typography>
-        <Box display="flex" justifyContent="space-between" gap={4} alignItems="center" mb={4}>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          gap={4}
+          alignItems="center"
+          mb={4}
+        >
           <TextField
             value={trainerNameFilter}
             onChange={(e) => setTrainerNameFilter(e.target.value)}
@@ -127,7 +145,12 @@ const StudentTrainingView: React.FC = () => {
             sx={{ width: "100%" }}
           />
         </Box>
-        <Button variant="contained" onClick={handleSearch} size="large" sx={{ mb: 5 }}>
+        <Button
+          variant="contained"
+          onClick={handleSearch}
+          size="large"
+          sx={{ mb: 5 }}
+        >
           Search
         </Button>
       </Box>

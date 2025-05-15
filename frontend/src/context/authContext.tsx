@@ -1,6 +1,20 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { AuthContextType, AuthProviderProps, RegistrationData, Role, UserData } from "../types/auth.types";
-import { deleteUserAccount, getUserProfile, loginUser, logoutUser, registerUser, saveUserToServer, updatePassword } from "../services/auth.service";
+import {
+  AuthContextType,
+  AuthProviderProps,
+  RegistrationData,
+  Role,
+  UserData,
+} from "../types/auth.types";
+import {
+  deleteUserAccount,
+  getUserProfile,
+  loginUser,
+  logoutUser,
+  registerUser,
+  saveUserToServer,
+  updatePassword,
+} from "../services/auth.service";
 import { useLocation } from "react-router-dom";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -8,7 +22,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
@@ -19,12 +33,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [error, setError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  const profileFetched = useRef(false); 
+  const profileFetched = useRef(false);
 
   useEffect(() => {
     const initializeAuth = async () => {
       setLoading(true);
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
 
       if (token && !profileFetched.current) {
         try {
@@ -33,7 +47,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           setIsAuthenticated(true);
         } catch (err) {
           console.error("Failed to fetch user profile:", err);
-          localStorage.removeItem('token');
+          localStorage.removeItem("token");
           setIsAuthenticated(false);
         }
       } else {
@@ -62,18 +76,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setError(null);
   }, [location]);
 
-  const login = async (email: string, password: string): Promise<UserData | undefined> => {
+  const login = async (
+    email: string,
+    password: string,
+  ): Promise<UserData | undefined> => {
     try {
       setLoading(true);
       setError(null);
       const response = await loginUser(email, password);
-      localStorage.setItem('token', response.token || 'mock-token');
+      localStorage.setItem("token", response.token || "mock-token");
       setCurrentUser(response);
       setIsAuthenticated(true);
       return response;
     } catch (error: any) {
-      console.error('Login error:', error);
-      setError(error.message || 'Failed to login');
+      console.error("Login error:", error);
+      setError(error.message || "Failed to login");
     } finally {
       setLoading(false);
     }
@@ -83,55 +100,66 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       setLoading(true);
       await logoutUser();
-      localStorage.removeItem('token');
+      localStorage.removeItem("token");
       setCurrentUser(null);
       profileFetched.current = false;
       setIsAuthenticated(false);
     } catch (error: any) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const register = async (userData: RegistrationData, role: Role = 'student'): Promise<any> => {
+  const register = async (
+    userData: RegistrationData,
+    role: Role = "student",
+  ): Promise<any> => {
     try {
       setLoading(true);
       setError(null);
       const response = await registerUser(userData, role);
       return response;
     } catch (error: any) {
-      console.error('Register error:', error);
-      setError(error.message || 'Failed to register');
+      console.error("Register error:", error);
+      setError(error.message || "Failed to register");
     } finally {
       setLoading(false);
     }
   };
 
-  const changePassword = async (currentPassword: string, newPassword: string, confirmPassword: string): Promise<any> => {
+  const changePassword = async (
+    currentPassword: string,
+    newPassword: string,
+    confirmPassword: string,
+  ): Promise<any> => {
     try {
       setLoading(true);
       setError(null);
-      const response = await updatePassword(currentPassword, newPassword, confirmPassword);
+      const response = await updatePassword(
+        currentPassword,
+        newPassword,
+        confirmPassword,
+      );
       return response;
     } catch (error: any) {
-      console.error('Change password error:', error);
-      setError(error.message || 'Failed to change password');
+      console.error("Change password error:", error);
+      setError(error.message || "Failed to change password");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   const updateUserData = async (
-    newUserData: Partial<UserData>
+    newUserData: Partial<UserData>,
   ): Promise<void> => {
     try {
       setLoading(true);
       const updatedUser = await saveUserToServer(newUserData);
       setCurrentUser(updatedUser);
     } catch (error: any) {
-      console.error('Error updating user data:', error);
-      setError(error.message || 'Failed to update user data');
+      console.error("Error updating user data:", error);
+      setError(error.message || "Failed to update user data");
     } finally {
       setLoading(false);
     }
@@ -143,16 +171,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const response = await deleteUserAccount();
       if (response.success) {
         console.log(response.message);
-        localStorage.removeItem('token');
+        localStorage.removeItem("token");
         setCurrentUser(null);
         profileFetched.current = false;
         setIsAuthenticated(false);
       } else {
-        throw new Error(response.message || 'Failed to delete account');
+        throw new Error(response.message || "Failed to delete account");
       }
     } catch (error: any) {
-      console.error('Error deleting account:', error);
-      setError(error.message || 'Failed to delete account');
+      console.error("Error deleting account:", error);
+      setError(error.message || "Failed to delete account");
     } finally {
       setLoading(false);
     }
@@ -171,9 +199,5 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     deleteAccount,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  )
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

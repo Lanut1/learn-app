@@ -11,22 +11,24 @@ const MyAccountPage = () => {
   const { currentUser, loading } = useAuth();
   const isTrainerPage = isTrainer(currentUser?.role);
 
-  if (loading) return (<FullPageLoader/>)
+  if (loading) return <FullPageLoader />;
 
   return (
     <>
-      {currentUser && 
-        (
-          <Box mx={12}>
-            <Typography variant="h1" align="center" mb={10}>
-              My Account
-            </Typography>
-            { isTrainerPage ? <TrainerView user={currentUser} /> : <StudentView user={currentUser} />}
-            <AccountActions />
-            <TrainingsSection />
-          </Box>
-        )
-      }
+      {currentUser && (
+        <Box mx={12}>
+          <Typography variant="h1" align="center" mb={10}>
+            My Account
+          </Typography>
+          {isTrainerPage ? (
+            <TrainerView user={currentUser} />
+          ) : (
+            <StudentView user={currentUser} />
+          )}
+          <AccountActions />
+          <TrainingsSection />
+        </Box>
+      )}
     </>
   );
 };
