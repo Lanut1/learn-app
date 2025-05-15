@@ -15,6 +15,7 @@ import EditProfilePage from "../pages/EditProfilePage";
 import AddTrainerPage from "../pages/AddTrainerPage";
 import TrainingsPage from "../pages/TrainingsPage";
 import AddTrainingPage from "../pages/AddTrainingPage";
+import NotFoundPage from "../pages/NotFoundPage";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -36,7 +37,7 @@ const AppRoutes: React.FC = () => {
           <Route path="/my-account/trainings" element={<TrainingsPage />} />
           <Route path="/my-account/trainings/add-training" element={<AddTrainingPage/>} />
         </Route>
-        {/* <Route path="*" element={<NotFound />} /> */}
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
   );
