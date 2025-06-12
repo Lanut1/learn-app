@@ -1,7 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { DynamoDBDocumentClient, PutCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
-import * as bcrypt from 'bcrypt';
+import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
 import { DYNAMO_DB_DOCUMENT_CLIENT } from './dynamodb.constants';
 
 export type UserItem = {
@@ -32,14 +31,10 @@ export class DynamodbService {
   }
 
   async createUser(userData: Omit<UserItem, 'pk' | 'sk' | 'createdAt'>): Promise<UserItem> {
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(userData.hashedPassword, saltRounds);
-
     const userItem: UserItem = {
       ...userData,
       pk: `USER#${userData.userId}`,
       sk: `METADATA#${userData.userId}`,
-      hashedPassword: hashedPassword,
       createdAt: new Date().toISOString(),
     };
 
@@ -64,5 +59,18 @@ export class DynamodbService {
 
     const { Items } = await this.ddbDocClient.send(command);
     return (Items?.[0] as UserItem) || null;
+  }
+
+  async getUserById(userId: string): Promise<UserItem | null> {
+    const command = new GetCommand({
+      TableName: this.usersTableName,
+      Key: {
+        pk: `USER#${userId}`,
+        sk: `METADATA#${userId}`,
+      },
+    });
+
+    const { Item } = await this.ddbDocClient.send(command);
+    return (Item as UserItem) || null;
   }
 }

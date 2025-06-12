@@ -1,4 +1,4 @@
-import { RegistrationData, Role, UserData } from "../types/auth.types";
+import { RegistrationData, UserData } from "../types/auth.types";
 
 export interface ApiError {
   status?: number;
@@ -7,138 +7,55 @@ export interface ApiError {
   details?: any;
 }
 
-// Simulate API call
-// Mock user data - in a real app, this would fetch from the server
+interface AuthResponse {
+  accessToken: string;
+  user: UserData;
+}
+
 export const getUserProfile = async (): Promise<UserData> => {
-  try {
-    await new Promise((resolve) => setTimeout(resolve, 700));
     const token = localStorage.getItem("token");
+    if (!token) throw new Error("No token found");
 
-    if (!token) {
-      const error: ApiError = {
-        status: 401,
-        message: "Not authenticated",
-        code: "AUTH_REQUIRED",
-      };
-      throw error;
+    const API_URL = `${import.meta.env.VITE_API_BASE_URL}/auth/profile`;
+    const response = await fetch(API_URL, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to fetch profile");
     }
-
-    if (token === "mock-token-trainer" || token.includes("trainer")) {
-      return {
-        id: "user-2",
-        email: "trainer@example.com",
-        firstName: "Jane",
-        lastName: "Smith",
-        username: "janesmith",
-        photo: undefined,
-        isActive: true,
-        role: "trainer",
-        specializationId: "type-1",
-        specialization: "frontend",
-      };
-    }
-
-    return {
-      id: "user-1",
-      email: "student@example.com",
-      firstName: "John",
-      lastName: "Doe",
-      username: "johndoe",
-      photo: undefined,
-      isActive: true,
-      role: "student",
-      dateOfBirth: "1990-01-01",
-      address: "123 Main St, Anytown, USA",
-    };
-  } catch (error) {
-    console.error("Error fetching user profile:", error);
-    throw error;
-  }
-};
-
-interface LoginResponse extends UserData {
-  token?: string;
+    return response.json();
 }
 
 export const loginUser = async (
   email: string,
   password: string,
-): Promise<LoginResponse> => {
-  try {
-    await new Promise((resolve) => setTimeout(resolve, 800));
+): Promise<AuthResponse> => {
+  const API_URL = `${import.meta.env.VITE_API_BASE_URL}/auth/login`;
 
-    if (email === "student@example.com" && password === "password") {
-      return {
-        id: "user-1",
-        email: "student@example.com",
-        firstName: "John",
-        lastName: "Doe",
-        username: "johndoe",
-        photo: undefined,
-        isActive: true,
-        role: "student",
-        dob: "10/27/1998",
-        address: "Belgrade, Mike Alasa 19",
-        trainers: [
-          { name: "Elizabeth Lopez", specialization: "PHP" },
-          { name: "John Down", specialization: "Java Script" },
-        ],
-        token: "mock-token-student",
-      };
-    } else if (email === "trainer@example.com" && password === "password") {
-      return {
-        id: "user-2",
-        email: "trainer@example.com",
-        firstName: "Jane",
-        lastName: "Smith",
-        username: "janesmith",
-        photo: undefined,
-        isActive: true,
-        role: "trainer",
-        address: "Belgrade, Mike Alasa 19",
-        specialization: "frontend",
-        students: [
-          { name: "Anna Ivanova", isActive: true },
-          { name: "Peter Smith", isActive: false },
-        ],
-        token: "mock-token-trainer",
-      };
-    } else if (email === "12345@gmail.com" && password === "Hello12345!") {
-      return {
-        id: "user-2",
-        email: "12345@gmail.com",
-        firstName: "Anna",
-        lastName: "Smith",
-        username: "anasmith",
-        photo: undefined,
-        isActive: true,
-        role: "trainer",
-        address: "Belgrade, Mike Alasa 19",
-        specialization: "backend",
-        students: [
-          { name: "Anna Ivanova", isActive: true },
-          { name: "Peter Smith", isActive: false },
-        ],
-        token: "mock-token-trainer",
-      };
-    } else {
-      const error: ApiError = {
-        status: 401,
-        message: "Invalid email or password",
-        code: "INVALID_CREDENTIALS",
-      };
-      throw error;
-    }
-  } catch (error) {
-    console.error("Login error:", error);
-    throw error;
+  const response = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Login failed');
   }
+
+  return response.json();
 };
 
 interface LogoutResponse {
   success: boolean;
 }
 
+//TODO: implement httponly cookies for token management
 export const logoutUser = async (): Promise<LogoutResponse> => {
   try {
     await new Promise((resolve) => setTimeout(resolve, 500));
@@ -149,20 +66,9 @@ export const logoutUser = async (): Promise<LogoutResponse> => {
   }
 };
 
-type RegisterResponse = {
-  pk: string;
-  sk: string;
-  userId: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  role: string;
-  createdAt: string;
-};
-
 export const registerUser = async (
   userData: RegistrationData,
-): Promise<RegisterResponse> => {
+): Promise<AuthResponse> => {
   const API_URL = `${import.meta.env.VITE_API_BASE_URL}/auth/register`;
 
   const response = await fetch(API_URL, {

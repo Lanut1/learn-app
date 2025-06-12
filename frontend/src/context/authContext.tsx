@@ -84,10 +84,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setLoading(true);
       setError(null);
       const response = await loginUser(email, password);
-      localStorage.setItem("token", response.token || "mock-token");
-      setCurrentUser(response);
+      localStorage.setItem("token", response.accessToken);
+      setCurrentUser(response.user);
       setIsAuthenticated(true);
-      return response;
+      return response.user;
     } catch (error: any) {
       console.error("Login error:", error);
       setError(error.message || "Failed to login");
