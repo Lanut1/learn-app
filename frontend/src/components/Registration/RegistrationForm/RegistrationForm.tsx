@@ -49,7 +49,7 @@ export const RegistrationForm = ({ variant }: { variant: Role }) => {
   const { register: authRegister, error, loading } = useAuth();
 
   const onSubmit = async (data: RegistrationData) => {
-    const result = await authRegister({ ...data }, variant);
+    const result = await authRegister({ ...data, role: variant });
 
     if (result) {
       setSubmitted(true);

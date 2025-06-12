@@ -113,12 +113,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const register = async (
     userData: RegistrationData,
-    role: Role = "student",
   ): Promise<any> => {
     try {
       setLoading(true);
       setError(null);
-      const response = await registerUser(userData, role);
+      const response = await registerUser(userData);
       return response;
     } catch (error: any) {
       console.error("Register error:", error);

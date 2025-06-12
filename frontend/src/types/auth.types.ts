@@ -52,6 +52,7 @@ export interface RegistrationData {
   address?: string;
   specialization?: string;
   password: string;
+  role?: Role;
 }
 
 export interface AuthContextType {

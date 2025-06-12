@@ -149,40 +149,36 @@ export const logoutUser = async (): Promise<LogoutResponse> => {
   }
 };
 
-interface RegisterResponse {
-  id: string;
+type RegisterResponse = {
+  pk: string;
+  sk: string;
+  userId: string;
   email: string;
   firstName: string;
   lastName: string;
-  username: string;
-  isActive: boolean;
-  role: Role;
-  registrationMessage: string;
-}
+  role: string;
+  createdAt: string;
+};
 
 export const registerUser = async (
   userData: RegistrationData,
-  role: Role = "student",
 ): Promise<RegisterResponse> => {
-  try {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+  const API_URL = `${import.meta.env.VITE_API_BASE_URL}/auth/register`;
 
-    const username = userData.email.split("@")[0];
+  const response = await fetch(API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(userData),
+  });
 
-    return {
-      id: `user-${Math.floor(Math.random() * 1000)}`,
-      email: userData.email,
-      firstName: userData.firstName,
-      lastName: userData.lastName,
-      username: username,
-      isActive: true,
-      role: role,
-      registrationMessage: "Registration successful! You can now log in.",
-    };
-  } catch (error) {
-    console.error("Registration error:", error);
-    throw error;
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Registration failed');
   }
+
+  return response.json();
 };
 
 export interface UpdatePasswordRequest {
