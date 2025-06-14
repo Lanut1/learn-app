@@ -7,16 +7,18 @@ export interface ApiError {
   details?: any;
 }
 
-interface AuthResponse {
+export interface AuthResponse {
   accessToken: string;
   user: UserData;
 }
+
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const getUserProfile = async (): Promise<UserData> => {
     const token = localStorage.getItem("token");
     if (!token) throw new Error("No token found");
 
-    const API_URL = `${import.meta.env.VITE_API_BASE_URL}/auth/profile`;
+    const API_URL = `${BASE_URL}/auth/profile`;
     const response = await fetch(API_URL, {
         method: 'GET',
         headers: {
@@ -35,7 +37,7 @@ export const loginUser = async (
   email: string,
   password: string,
 ): Promise<AuthResponse> => {
-  const API_URL = `${import.meta.env.VITE_API_BASE_URL}/auth/login`;
+  const API_URL = `${BASE_URL}/auth/login`;
 
   const response = await fetch(API_URL, {
     method: 'POST',
@@ -69,7 +71,7 @@ export const logoutUser = async (): Promise<LogoutResponse> => {
 export const registerUser = async (
   userData: RegistrationData,
 ): Promise<AuthResponse> => {
-  const API_URL = `${import.meta.env.VITE_API_BASE_URL}/auth/register`;
+  const API_URL = `${BASE_URL}/auth/register`;
 
   const response = await fetch(API_URL, {
     method: 'POST',
@@ -103,79 +105,28 @@ export const updatePassword = async (
   confirmPassword: string,
 ): Promise<UpdatePasswordResponse> => {
   try {
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('Not authenticated');
 
-    if (currentPassword !== "password") {
-      const error: ApiError = {
-        status: 400,
-        message: "Current password is incorrect",
-        code: "INVALID_PASSWORD",
-      };
-      throw error;
+    const payload = { currentPassword, newPassword, confirmPassword };
+    
+    const response = await fetch(`${BASE_URL}/auth/profile/password`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to update password');
     }
 
-    if (newPassword !== confirmPassword) {
-      const error: ApiError = {
-        status: 400,
-        message: "Passwords do not match",
-        code: "INVALID_PASSWORD_FORMAT",
-      };
-      throw error;
-    }
-
-    if (!newPassword || newPassword.length < 6) {
-      const error: ApiError = {
-        status: 400,
-        message: "New password must be at least 6 characters",
-        code: "INVALID_PASSWORD_FORMAT",
-      };
-      throw error;
-    }
-
-    return { success: true, message: "Password updated successfully" };
+    return response.json();
   } catch (error) {
     console.error("Error updating password:", error);
-    throw error;
-  }
-};
-
-export interface UpdateUserProfileRequest {
-  firstName?: string;
-  lastName?: string;
-  address?: string;
-  dateOfBirth?: string;
-  [key: string]: any;
-}
-
-export type UpdateUserProfileResponse = UserData & {
-  updatedAt: string;
-};
-
-export const updateUserProfile = async (
-  userData: UpdateUserProfileRequest,
-): Promise<UpdateUserProfileResponse> => {
-  try {
-    await new Promise((resolve) => setTimeout(resolve, 900));
-
-    const token = localStorage.getItem("token");
-    if (!token) {
-      const error: ApiError = {
-        status: 401,
-        message: "Not authenticated",
-        code: "AUTH_REQUIRED",
-      };
-      throw error;
-    }
-
-    const currentUserData = await getUserProfile();
-
-    return {
-      ...currentUserData,
-      ...userData,
-      updatedAt: new Date().toISOString(),
-    };
-  } catch (error) {
-    console.error("Error updating user profile:", error);
     throw error;
   }
 };
@@ -190,6 +141,7 @@ export interface UploadUserPhotoResponse {
   message: string;
 }
 
+//TODO: Implement actual file upload logic
 export const uploadUserPhoto = async (
   photoData: string,
 ): Promise<UploadUserPhotoResponse> => {
@@ -224,19 +176,23 @@ export interface DeleteUserAccountResponse {
 export const deleteUserAccount =
   async (): Promise<DeleteUserAccountResponse> => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 800));
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('Not authenticated');
 
-      const token = localStorage.getItem("token");
-      if (!token) {
-        const error: ApiError = {
-          status: 401,
-          message: "Not authenticated",
-          code: "AUTH_REQUIRED",
-        };
-        throw error;
+      const response = await fetch(`${BASE_URL}/auth/profile`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to delete user profile');
       }
 
-      return { success: true, message: "Account deleted successfully" };
+      return response.json();
+
     } catch (error) {
       console.error("Error deleting user account:", error);
       throw error;
@@ -247,38 +203,25 @@ export const saveUserToServer = async (
   userData: Partial<UserData>,
 ): Promise<UserData> => {
   try {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
     const token = localStorage.getItem("token");
-    if (!token) {
-      const error: ApiError = {
-        status: 401,
-        message: "Not authenticated",
-        code: "AUTH_REQUIRED",
-      };
-      throw error;
+
+    if (!token) throw new Error('Not authenticated');
+
+    const response = await fetch(`${BASE_URL}/auth/profile`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to update user profile');
     }
 
-    const currentUserData = await getUserProfile();
-
-    if (userData.email && !/\S+@\S+\.\S+/.test(userData.email)) {
-      const error: ApiError = {
-        status: 400,
-        message: "Invalid email format",
-        code: "INVALID_EMAIL_FORMAT",
-      };
-      throw error;
-    }
-
-    const updatedUser: UserData & { updatedAt: string } = {
-      ...currentUserData,
-      ...userData,
-      updatedAt: new Date().toISOString(),
-    };
-
-    console.log("User data saved to server:", updatedUser);
-
-    return updatedUser;
+    return response.json();
   } catch (error) {
     console.error("Error saving user to server:", error);
     throw error;

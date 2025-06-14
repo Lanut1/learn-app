@@ -1,4 +1,4 @@
-import { Injectable, ConflictException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, ConflictException, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { DynamodbService, UserItem } from 'src/dynamodb/dynamodb.service';
 import { randomUUID } from 'crypto';
@@ -6,6 +6,8 @@ import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/login-user.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtPayload } from './auth.constants';
+import { ChangePasswordDto } from './dto/change-password.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 type AuthResponse = {
   accessToken: string;
@@ -57,9 +59,11 @@ export class AuthService {
     const newUserPayload = {
       userId: userId,
       email: registerDto.email,
+      username: registerDto.email.split('@')[0],
       firstName: registerDto.firstName,
       lastName: registerDto.lastName,
       role: registerDto.role || 'student',
+      isActive: true,
       hashedPassword: hashedPassword,
       ...(registerDto.dob && { dob: registerDto.dob }),
       ...(registerDto.address && { address: registerDto.address }),
@@ -70,6 +74,48 @@ export class AuthService {
     const { accessToken } = await this._signInToken(createdUser.userId, createdUser.email);
 
     return { accessToken, user: createdUser };
+  }
+
+    async updateProfile(userId: string, updateUserDto: UpdateUserDto) {
+    const updatedUser = await this.dynamodbService.updateUser(userId, updateUserDto);
+
+    if (!updatedUser) {
+      throw new NotFoundException('User not found.');
+    }
+
+    const { hashedPassword, ...result } = updatedUser;
+    return result;
+  }
+
+  async changePassword(userId: string, changePasswordDto: ChangePasswordDto) {
+    const user = await this.dynamodbService.getUserById(userId);
+
+    if (!user) {
+      throw new NotFoundException('User not found.');
+    }
+
+    const isPasswordMatching = await bcrypt.compare(
+      changePasswordDto.currentPassword,
+      user.hashedPassword,
+    );
+
+    if (!isPasswordMatching) {
+      throw new UnauthorizedException('Current password is incorrect.');
+    }
+
+    const saltRounds = 10;
+    const newHashedPassword = await bcrypt.hash(changePasswordDto.newPassword, saltRounds);
+
+    await this.dynamodbService.updateUser(userId, {
+      hashedPassword: newHashedPassword,
+    });
+
+    return { success: true, message: 'Password updated successfully' };
+  }
+
+  async deleteAccount(userId: string) {
+    await this.dynamodbService.deleteUser(userId);
+    return { success: true, message: 'Account deleted successfully' };
   }
 
   private async _signInToken(userId: string, email: string): Promise<{ accessToken: string }> {

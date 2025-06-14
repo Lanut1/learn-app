@@ -3,10 +3,10 @@ import {
   AuthContextType,
   AuthProviderProps,
   RegistrationData,
-  Role,
   UserData,
 } from "../types/auth.types";
 import {
+  AuthResponse,
   deleteUserAccount,
   getUserProfile,
   loginUser,
@@ -113,7 +113,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const register = async (
     userData: RegistrationData,
-  ): Promise<any> => {
+  ): Promise<AuthResponse | undefined> => {
     try {
       setLoading(true);
       setError(null);
@@ -122,6 +122,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } catch (error: any) {
       console.error("Register error:", error);
       setError(error.message || "Failed to register");
+      return undefined;
     } finally {
       setLoading(false);
     }
