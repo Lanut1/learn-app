@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { DynamodbModule } from './dynamodb/dynamodb.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { TrainingsModule } from './trainings/trainings.module';
+import { TrainersModule } from './trainers/trainers.module';
 
 @Module({
   imports: [
@@ -12,6 +14,8 @@ import { AuthModule } from './auth/auth.module';
     }),
     DynamodbModule,
     AuthModule,
+    TrainingsModule,
+    TrainersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

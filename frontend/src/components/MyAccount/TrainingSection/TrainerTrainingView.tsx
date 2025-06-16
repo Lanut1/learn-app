@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import {
-  getTrainingsForTrainer,
+  getMyTrainings,
   Training,
 } from "../../../services/trainings.service";
 import dayjs, { Dayjs } from "dayjs";
@@ -31,7 +31,7 @@ const TrainerTrainingView: React.FC = () => {
     try {
       setLoading(true);
       const fetchTrainings = async () => {
-        const data = await getTrainingsForTrainer();
+        const data = await getMyTrainings();
         setTrainings(data);
         setFilteredTrainings(data);
       };
@@ -48,7 +48,7 @@ const TrainerTrainingView: React.FC = () => {
 
     if (nameFilter) {
       result = result.filter((training) =>
-        training.participantName
+        training.studentName
           .toLowerCase()
           .includes(nameFilter.toLowerCase()),
       );
@@ -111,11 +111,11 @@ const TrainerTrainingView: React.FC = () => {
           </TableHead>
           <TableBody>
             {filteredTrainings.map((training) => (
-              <TableRow key={training.id}>
+              <TableRow key={training.trainingId}>
                 <TableCell>{training.date}</TableCell>
                 <TableCell>{training.trainingName}</TableCell>
                 <TableCell>{training.type}</TableCell>
-                <TableCell>{training.participantName}</TableCell>
+                <TableCell>{training.studentName}</TableCell>
                 <TableCell>{training.duration}</TableCell>
               </TableRow>
             ))}

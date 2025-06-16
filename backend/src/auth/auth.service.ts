@@ -37,7 +37,7 @@ export class AuthService {
     const user = await this.dynamodbService.getUserByEmail(email);
 
     if (user && (await bcrypt.compare(password, user.hashedPassword))) {
-      const { accessToken } = await this._signInToken(user.userId, user.email);
+      const { accessToken } = await this._signInToken(user.userId, user.email, user.role);
       const { hashedPassword, ...userProfile } = user;
       
       return { accessToken, user: userProfile };
@@ -71,7 +71,7 @@ export class AuthService {
     };
 
     const createdUser = await this.dynamodbService.createUser(newUserPayload);
-    const { accessToken } = await this._signInToken(createdUser.userId, createdUser.email);
+    const { accessToken } = await this._signInToken(createdUser.userId, createdUser.email, createdUser.role);
 
     return { accessToken, user: createdUser };
   }
@@ -118,8 +118,8 @@ export class AuthService {
     return { success: true, message: 'Account deleted successfully' };
   }
 
-  private async _signInToken(userId: string, email: string): Promise<{ accessToken: string }> {
-    const payload: JwtPayload = { sub: userId, email };
+  private async _signInToken(userId: string, email: string, role: string): Promise<{ accessToken: string }> {
+    const payload: JwtPayload = { sub: userId, email, role };
     const accessToken = await this.jwtService.signAsync(payload);
     return { accessToken };
   }

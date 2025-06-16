@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   Box,
@@ -10,14 +10,46 @@ import {
   TableCell,
   TableBody,
   Paper,
+  CircularProgress,
+  Alert,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
+import { getUserTrainers, Trainer } from "../../../../services/trainers.service";
 
-interface TrainersListProps {
-  trainers: Array<{ name: string; specialization: string }>;
-}
+const TrainersList: React.FC = () => {
+  const [trainers, setTrainers] = useState<Trainer[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-const TrainersList: React.FC<TrainersListProps> = ({ trainers }) => {
+  useEffect(() => {
+    const fetchTrainers = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await getUserTrainers();
+        setTrainers(data);
+      } catch (err: any) {
+        setError(err.message || "An unexpected error occurred.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTrainers();
+  }, []);
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return <Alert severity="error">{error}</Alert>;
+  }
+  
   return (
     <Box sx={{ minWidth: "30%" }}>
       <Box
