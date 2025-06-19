@@ -34,13 +34,17 @@ const AddTrainerPage: React.FC = () => {
   };
 
   const handleAddTrainers = async () => {
-    const response = await addTrainersToUser(selectedTrainers);
+    const alreadyAddedIds = new Set(myTrainers.map((t) => t.id));
+    const newTrainerIds = selectedTrainers.filter((id) => !alreadyAddedIds.has(id));
+
+    if (newTrainerIds.length === 0) return;
+    
+    const response = await addTrainersToUser(newTrainerIds);
     if (response.success) {
       const newlyAdded = allTrainers.filter((trainer) =>
         response.addedTrainerIds.includes(trainer.id),
       );
       setMyTrainers((prev) => [...prev, ...newlyAdded]);
-      setSelectedTrainers([]);
     }
   };
 
@@ -58,6 +62,7 @@ const AddTrainerPage: React.FC = () => {
         <AllTrainersList
           trainers={allTrainers}
           selectedTrainers={selectedTrainers}
+          disabledTrainers={myTrainers.map(t => t.id)}
           onSelectTrainer={handleSelectTrainer}
         />
         <MyTrainersList myTrainers={myTrainers} />

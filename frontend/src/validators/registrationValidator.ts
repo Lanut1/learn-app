@@ -15,7 +15,7 @@ export const studentSchema = Joi.object({
       "string.email": "Invalid email",
       "string.empty": "Email is required",
     }),
-  dob: Joi.date().optional(),
+  dob: Joi.string().optional(),
   address: Joi.string().allow("").optional(),
   password: passwordValidation,
 });

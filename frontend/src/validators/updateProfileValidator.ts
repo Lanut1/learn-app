@@ -11,7 +11,7 @@ export const updateProfileSchema = Joi.object({
   email: Joi.string()
     .email({ tlds: { allow: false } })
     .required(),
-  dob: Joi.date().allow(null, ""),
+  dob: Joi.string().allow(null, ""),
   address: Joi.string().allow(null, ""),
   specialization: Joi.string().allow(null, ""),
-});
+}).unknown(true);

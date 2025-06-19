@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   Box,
@@ -9,13 +9,44 @@ import {
   TableRow,
   TableCell,
   TableBody,
+  CircularProgress,
+  Alert,
 } from "@mui/material";
+import { getMyStudents, Student } from "../../../../services/trainers.service";
 
-interface StudentsListProps {
-  students: Array<{ name: string; isActive: boolean }>;
-}
+const StudentsList: React.FC = () => {
+  const [students, setStudents] = useState<Student[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-const StudentsList: React.FC<StudentsListProps> = ({ students }) => {
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await getMyStudents();
+        setStudents(data);
+      } catch (err: any) {
+        setError(err.message || "An unexpected error occurred while fetching students.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStudents();
+  }, []);
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return <Alert severity="error">{error}</Alert>;
+  }
   return (
     <Box sx={{ minWidth: "30%" }}>
       <Typography variant="h3" gutterBottom>

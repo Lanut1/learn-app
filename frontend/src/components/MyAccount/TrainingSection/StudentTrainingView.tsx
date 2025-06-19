@@ -15,7 +15,7 @@ import {
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import {
-  getTrainingsForTrainer,
+  getMyTrainings,
   Training,
 } from "../../../services/trainings.service";
 import { Link as RouterLink } from "react-router-dom";
@@ -31,20 +31,20 @@ const StudentTrainingView: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      setLoading(true);
-      const fetchTrainings = async () => {
-        const data = await getTrainingsForTrainer();
+    const fetchTrainings = async () => {
+      try {
+        setLoading(true);
+        const data = await getMyTrainings();
         setTrainings(data);
         setFilteredTrainings(data);
-      };
+      } catch (error) {
+        console.error("Failed to fetch trainings:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      fetchTrainings();
-    } catch (error) {
-      console.error("Failed to fetch trainings:", error);
-    } finally {
-      setLoading(false);
-    }
+    fetchTrainings();
   }, []);
 
   const handleSearch = () => {
@@ -52,7 +52,7 @@ const StudentTrainingView: React.FC = () => {
 
     if (trainerNameFilter) {
       result = result.filter((training) =>
-        training.participantName
+        training.trainerName
           .toLowerCase()
           .includes(trainerNameFilter.toLowerCase()),
       );
@@ -69,16 +69,16 @@ const StudentTrainingView: React.FC = () => {
     if (fromDate) {
       result = result.filter(
         (training) =>
-          dayjs(training.date, "DD.MM.YYYY").isAfter(fromDate, "day") ||
-          dayjs(training.date, "DD.MM.YYYY").isSame(fromDate, "day"),
+          dayjs(training.date).isSame(fromDate, "day") ||
+          dayjs(training.date).isAfter(fromDate, "day")
       );
     }
 
     if (toDate) {
       result = result.filter(
         (training) =>
-          dayjs(training.date, "DD.MM.YYYY").isBefore(toDate, "day") ||
-          dayjs(training.date, "DD.MM.YYYY").isSame(toDate, "day"),
+          dayjs(training.date).isSame(toDate, "day") ||
+          dayjs(training.date).isBefore(toDate, "day")
       );
     }
 
@@ -128,7 +128,7 @@ const StudentTrainingView: React.FC = () => {
           <TextField
             value={specializationFilter}
             onChange={(e) => setSpecializationFilter(e.target.value)}
-            label="Specialization"
+            label="Training Name"
             variant="outlined"
             fullWidth
           />
@@ -171,11 +171,11 @@ const StudentTrainingView: React.FC = () => {
             </TableHead>
             <TableBody>
               {filteredTrainings.map((training) => (
-                <TableRow key={training.id}>
+                <TableRow key={training.trainingId}>
                   <TableCell>{training.date}</TableCell>
                   <TableCell>{training.trainingName}</TableCell>
                   <TableCell>{training.type}</TableCell>
-                  <TableCell>{training.participantName}</TableCell>
+                  <TableCell>{training.trainerName}</TableCell>
                   <TableCell>{training.duration}</TableCell>
                 </TableRow>
               ))}

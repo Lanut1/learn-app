@@ -11,6 +11,7 @@ import {
   TableBody,
 } from "@mui/material";
 import { Trainer } from "../../../services/trainers.service";
+import { SPECIALIZATION_LABELS } from "../../Registration/RegistrationForm/utils";
 
 interface MyTrainersListProps {
   myTrainers: Trainer[];
@@ -44,7 +45,7 @@ const MyTrainersList: React.FC<MyTrainersListProps> = ({ myTrainers }) => {
                 <TableCell sx={{ fontWeight: "bold" }}>
                   {trainer.name}
                 </TableCell>
-                <TableCell>{trainer.specialization}</TableCell>
+                <TableCell>{SPECIALIZATION_LABELS[trainer.specialization]}</TableCell>
               </TableRow>
             ))}
           </TableBody>

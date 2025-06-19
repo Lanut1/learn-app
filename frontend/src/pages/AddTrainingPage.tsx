@@ -13,11 +13,13 @@ import {
 import { DatePicker } from "@mui/x-date-pickers";
 import { Dayjs } from "dayjs";
 import { useAuth } from "../context/authContext";
-import { getUserTrainers } from "../services/trainers.service";
+import { getUserTrainers, Trainer } from "../services/trainers.service";
 import { addTraining } from "../services/trainings.service";
 import FullPageLoader from "../components/PageLoading/PageLoading";
 import BreadcrumbsNavigation from "../components/Breadcrumbs/Breadcrumbs";
 import { Link as RouterLink } from "react-router-dom";
+
+type TrainerOption = Pick<Trainer, 'id' | 'name'>;
 
 const AddTrainingPage: React.FC = () => {
   const { currentUser, loading } = useAuth();
@@ -29,9 +31,9 @@ const AddTrainingPage: React.FC = () => {
   const [duration, setDuration] = useState<number>(0);
   const [type, setType] = useState("");
   const [description, setDescription] = useState("");
-  const [selectedTrainer, setSelectedTrainer] = useState<string | null>(null);
+  const [selectedTrainer, setSelectedTrainer] = useState<TrainerOption | null>(null);
 
-  const [trainers, setTrainers] = useState<string[]>([]);
+  const [trainers, setTrainers] = useState<TrainerOption[]>([]);
   const [loadingTrainers, setLoadingTrainers] = useState(true);
 
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
@@ -44,7 +46,7 @@ const AddTrainingPage: React.FC = () => {
     const fetchTrainers = async () => {
       try {
         const userTrainers = await getUserTrainers();
-        const trainerNames = userTrainers.map((trainer) => trainer.name);
+        const trainerNames = userTrainers.map(({id, name}) => ({ id, name}));
         setTrainers(trainerNames);
       } catch (error) {
         console.error("Failed to fetch trainers:", error);
@@ -61,10 +63,11 @@ const AddTrainingPage: React.FC = () => {
   const handleAddTraining = async () => {
     try {
       await addTraining({
-        date: trainingDate?.format("DD.MM.YYYY") ?? "",
+        date: trainingDate?.format("YYYY-MM-DD") ?? "",
         trainingName: name,
         type,
-        participantName: selectedTrainer ?? "",
+        trainerId: selectedTrainer?.id ?? "",
+        studentId: currentUser?.userId ?? "",
         duration,
       });
 
@@ -170,6 +173,8 @@ const AddTrainingPage: React.FC = () => {
                 <Autocomplete
                   options={trainers}
                   value={selectedTrainer}
+                  getOptionLabel={(option) => option.name}
+                  isOptionEqualToValue={(option, value) => option.id === value.id}
                   onChange={(event, newValue) => setSelectedTrainer(newValue)}
                   renderInput={(params) => (
                     <TextField {...params} label="Trainer" />
@@ -207,9 +212,9 @@ const AddTrainingPage: React.FC = () => {
       )}
       <Snackbar
         open={snackbarOpen}
-        autoHideDuration={4000}
+        autoHideDuration={2000}
         onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
         <Alert
           onClose={handleSnackbarClose}

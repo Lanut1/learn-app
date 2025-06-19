@@ -4,6 +4,7 @@ import { UserData } from "../../../types/auth.types";
 import theme from "../../../theme";
 import UserStatus from "./components/UserStatus";
 import InfoItem from "./components/InfoItem";
+import { SPECIALIZATION_LABELS } from "../../Registration/RegistrationForm/utils";
 
 interface ProfileCardProps {
   user: UserData;
@@ -47,7 +48,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user, isTrainer }) => {
       {isTrainer && (
         <InfoItem
           label="Specialization"
-          value={user.specialization || "No specialization provided"}
+          value={user.specialization ? SPECIALIZATION_LABELS[user.specialization] : "No specialization provided"}
         />
       )}
       {!isTrainer && (

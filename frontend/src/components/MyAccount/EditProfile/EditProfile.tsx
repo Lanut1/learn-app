@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import {
   TextField,
   Box,
@@ -9,62 +8,62 @@ import {
   Alert,
   MenuItem,
   Paper,
+  Snackbar,
 } from "@mui/material";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { useForm, Controller } from "react-hook-form";
 import { DatePicker } from "@mui/x-date-pickers";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
+
 import { UserData } from "../../../types/auth.types";
 import { updateProfileSchema } from "../../../validators/updateProfileValidator";
 import FullPageLoader from "../../PageLoading/PageLoading";
 import { SPECIALIZATIONS } from "../../Registration/RegistrationForm/utils";
 import { useAuth } from "../../../context/authContext";
-import { Link as RouterLink } from "react-router-dom";
-import dayjs from "dayjs";
 import theme from "../../../theme";
+import { useState } from "react";
 
 const EditProfile = () => {
+   const [openSnackbar, setOpenSnackbar] = useState(false);
   const { loading, error, updateUserData, currentUser } = useAuth();
+  const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
     control,
-    reset,
-    formState: { errors },
+    formState: { errors, dirtyFields },
   } = useForm<Partial<UserData>>({
     defaultValues: currentUser || {},
     resolver: joiResolver(updateProfileSchema),
+    mode: "onChange",
   });
 
-  const [previewPhoto, setPreviewPhoto] = useState<string | null>(
-    currentUser?.photo || null,
-  );
+  const onSubmit = async (currentFormValues: Partial<UserData>) => {
+    const changedFieldNames = Object.keys(dirtyFields) as Array<keyof UserData>;
 
-  useEffect(() => {
-    if (currentUser) {
-      reset(currentUser);
-      setPreviewPhoto(currentUser.photo || null);
+    if (changedFieldNames.length === 0) {
+      console.log("No changes detected. Submission cancelled.");
+      return;
     }
-  }, [currentUser, reset]);
 
-  const handlePhotoUploadChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setPreviewPhoto(reader.result as string);
-      };
+    const payloadForServer: Partial<UserData> = {};
 
-      reader.readAsDataURL(file);
+    changedFieldNames.forEach(fieldName => {
+      (payloadForServer as any)[fieldName] = currentFormValues[fieldName];
+    });
+
+    const updatedProfile = await updateUserData(payloadForServer);
+
+    if (updatedProfile) {
+      setOpenSnackbar(true);
+      setTimeout(() => navigate("/my-account"), 1500);
     }
   };
 
-  const onSubmit = async (data: Partial<UserData>) => {
-    if (previewPhoto !== currentUser?.photo) {
-      data.photo = previewPhoto || "";
-    }
-
-    await updateUserData(data);
+  const onInvalid = (validationErrors: any) => {
+    console.error("Form validation failed:", validationErrors);
   };
 
   const isTrainer = currentUser?.role === "trainer";
@@ -73,7 +72,7 @@ const EditProfile = () => {
 
   return (
     <Container maxWidth={false} sx={{ width: "90%", mx: "auto" }}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
         <Box
           sx={{
             display: "flex",
@@ -83,11 +82,11 @@ const EditProfile = () => {
           }}
         >
           <Box
-            sx={{ display: "flex", gap: 8, justifyContent: "space-between" }}
+            sx={{ display: "flex", gap: 8, justifyContent: "space-between", width: '100%' }}
           >
             <Paper
               elevation={2}
-              sx={{ padding: 4, borderRadius: 2, maxWidth: "50%" }}
+              sx={{ padding: 4, borderRadius: 2, flexGrow: 1, maxWidth: '60%' }}
             >
               <Typography variant="h3" gutterBottom>
                 Edit Profile
@@ -99,11 +98,11 @@ const EditProfile = () => {
                 </Alert>
               )}
 
-              <Box sx={{ display: "flex", flexDirection: "column", gap: 5 }}>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                 <Box sx={{ display: "flex", gap: 3, alignItems: "center" }}>
                   <Avatar
                     alt={currentUser?.firstName}
-                    src={previewPhoto || ""}
+                    src={currentUser?.photo || ""}
                     variant="square"
                     sx={{
                       width: 160,
@@ -113,41 +112,13 @@ const EditProfile = () => {
                       borderRadius: 1,
                     }}
                   >
-                    {!previewPhoto &&
-                      currentUser?.firstName.charAt(0).toUpperCase()}
+                    {!currentUser?.photo && currentUser?.firstName?.charAt(0).toUpperCase()}
                   </Avatar>
-                  <Box>
-                    <Typography variant="body1" gutterBottom>
-                      Upload a profile photo
-                    </Typography>
-                    <Typography variant="body2" gutterBottom>
-                      Your photo should be in PNG or JPG format
-                    </Typography>
-                    <Button variant="outlined" component="label" size="small">
-                      Upload Photo
-                      <input
-                        type="file"
-                        accept="image/*"
-                        hidden
-                        onChange={handlePhotoUploadChange}
-                      />
-                    </Button>
-                    {previewPhoto && (
-                      <Button
-                        variant="contained"
-                        color="error"
-                        size="small"
-                        sx={{ ml: 2 }}
-                        onClick={() => setPreviewPhoto(null)}
-                      >
-                        Remove
-                      </Button>
-                    )}
-                  </Box>
                 </Box>
 
                 <Box sx={{ flexGrow: 1 }}>
                   <TextField
+                    fullWidth
                     label="First Name"
                     margin="normal"
                     {...register("firstName")}
@@ -155,6 +126,7 @@ const EditProfile = () => {
                     helperText={errors.firstName?.message}
                   />
                   <TextField
+                    fullWidth
                     label="Last Name"
                     margin="normal"
                     {...register("lastName")}
@@ -162,17 +134,27 @@ const EditProfile = () => {
                     helperText={errors.lastName?.message}
                   />
                   <TextField
+                    fullWidth
                     label="Email"
                     disabled
                     margin="normal"
                     {...register("email")}
                   />
                   <TextField
+                    fullWidth
                     label="Username"
                     margin="normal"
                     {...register("username")}
                     error={!!errors.username}
                     helperText={errors.username?.message}
+                  />
+                  <TextField
+                    fullWidth
+                    label="Address"
+                    margin="normal"
+                    {...register("address")}
+                    error={!!errors.address}
+                    helperText={errors.address?.message?.toString()}
                   />
 
                   {!isTrainer && (
@@ -183,25 +165,21 @@ const EditProfile = () => {
                         render={({ field }) => (
                           <DatePicker
                             {...field}
-                            value={
-                              field.value ? dayjs(field.value as string) : null
-                            }
                             label="Date of Birth (optional)"
+                            value={field.value ? dayjs(field.value) : null}
+                            onChange={(newValue) => {
+                              field.onChange(newValue ? newValue.format('YYYY-MM-DD') : null);
+                            }}
                             slotProps={{
                               textField: {
                                 fullWidth: true,
                                 margin: "normal",
+                                error: !!errors.dob,
+                                helperText: typeof errors.dob?.message === "string" ? errors.dob.message : undefined,
                               },
                             }}
                           />
                         )}
-                      />
-                      <TextField
-                        label="Address"
-                        margin="normal"
-                        {...register("address")}
-                        error={!!errors.address}
-                        helperText={errors.address?.message?.toString()}
                       />
                     </>
                   )}
@@ -210,25 +188,29 @@ const EditProfile = () => {
             </Paper>
 
             {isTrainer && (
-              <Controller
-                control={control}
-                name="specialization"
-                render={({ field }) => (
-                  <TextField
-                    select
-                    sx={{ maxWidth: "30%" }}
-                    label="Specialization"
-                    margin="normal"
-                    {...field}
-                  >
-                    {SPECIALIZATIONS.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                )}
-              />
+              <Box sx={{ minWidth: 250, maxWidth: '30%' }}>
+                <Controller
+                  control={control}
+                  name="specialization"
+                  render={({ field }) => (
+                    <TextField
+                      select
+                      fullWidth
+                      label="Specialization"
+                      margin="normal"
+                      {...field}
+                      error={!!errors.specialization}
+                      helperText={typeof errors.specialization?.message === "string" ? errors.specialization.message : undefined}
+                    >
+                      {SPECIALIZATIONS.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                />
+              </Box>
             )}
           </Box>
 
@@ -252,6 +234,16 @@ const EditProfile = () => {
           </Box>
         </Box>
       </form>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={1200}
+        onClose={() => setOpenSnackbar(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert elevation={6} variant="filled" severity="success">
+          Profile updated successfully!
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

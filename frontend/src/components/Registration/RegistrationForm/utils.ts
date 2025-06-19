@@ -10,3 +10,8 @@ export const SPECIALIZATIONS = [
   { value: "blockchain", label: "Blockchain Development" },
   { value: "game_dev", label: "Game Development" },
 ];
+
+export const SPECIALIZATION_LABELS = SPECIALIZATIONS.reduce((acc, spec) => {
+  acc[spec.value] = spec.label;
+  return acc;
+}, {} as Record<string, string>);

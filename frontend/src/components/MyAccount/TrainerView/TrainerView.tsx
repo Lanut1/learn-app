@@ -20,7 +20,7 @@ const TrainerView: React.FC<TrainerViewProps> = ({ user }) => {
       }}
     >
       <ProfileCard user={user} isTrainer />
-      <StudentsList students={user.students} />
+      <StudentsList/>
     </Box>
   );
 };

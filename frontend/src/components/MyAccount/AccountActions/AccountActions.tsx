@@ -5,7 +5,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   Typography,
 } from "@mui/material";
@@ -74,29 +73,25 @@ const AccountActions = () => {
 
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
-          <Typography variant="h4" component="h2">
             Profile Deletion Confirmation
-          </Typography>
         </DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            <Typography variant="body2" mb={2}>
-              We're truly sorry to see you go. Before you proceed with deleting
-              your profile, we want you to know that this action is permanent
-              and irreversible. You'll lose access to all your account
-              information, course progress, certificates, and any learning
-              communities you're a part of.
-            </Typography>
-            <Typography variant="body2">
-              If there's anything we can do to improve your experience or if you
-              need assistance with any issues you've encountered, please reach
-              out to our support team. We're always here to help.
-            </Typography>
-            <Typography variant="body2" mt={2}>
-              If you still wish to delete your account, please click on the
-              'Confirm' button below.
-            </Typography>
-          </DialogContentText>
+          <Typography variant="body2" mb={2}>
+            We're truly sorry to see you go. Before you proceed with deleting
+            your profile, we want you to know that this action is permanent
+            and irreversible. You'll lose access to all your account
+            information, course progress, certificates, and any learning
+            communities you're a part of.
+          </Typography>
+          <Typography variant="body2">
+            If there's anything we can do to improve your experience or if you
+            need assistance with any issues you've encountered, please reach
+            out to our support team. We're always here to help.
+          </Typography>
+          <Typography variant="body2" mt={2}>
+            If you still wish to delete your account, please click on the
+            'Confirm' button below.
+          </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary" variant="outlined">
