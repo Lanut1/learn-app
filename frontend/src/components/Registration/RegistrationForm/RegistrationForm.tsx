@@ -25,6 +25,7 @@ import { isTrainer } from "../../../utils/isTrainer";
 import FullPageLoader from "../../PageLoading/PageLoading";
 import { DatePicker } from "@mui/x-date-pickers";
 import { SPECIALIZATIONS } from "./utils";
+import dayjs from "dayjs";
 
 const schemaMap = {
   student: studentSchema,
@@ -40,6 +41,7 @@ export const RegistrationForm = ({ variant }: { variant: Role }) => {
     control,
   } = useForm<RegistrationData>({
     resolver: joiResolver(schema),
+    mode: "onChange",
   });
 
   const [submitted, setSubmitted] = useState(false);
@@ -49,14 +51,20 @@ export const RegistrationForm = ({ variant }: { variant: Role }) => {
   const { register: authRegister, error, loading } = useAuth();
 
   const onSubmit = async (data: RegistrationData) => {
-    const result = await authRegister({ ...data, role: variant });
+    const payload = { ...data };
+
+    if (payload.dob && dayjs.isDayjs(payload.dob)) {
+      payload.dob = payload.dob.format("YYYY-MM-DD");
+    }
+
+    const result = await authRegister({ ...payload, role: variant });
 
     if (result) {
       setSubmitted(true);
       setSubmittedData({
-        username: result.user.username,
+        username: result.username,
         password: data.password,
-        email: result.user.email,
+        email: result.email,
       });
     }
   };
@@ -141,16 +149,20 @@ export const RegistrationForm = ({ variant }: { variant: Role }) => {
                   <Controller
                     control={control}
                     name="dob"
-                    defaultValue={undefined}
                     render={({ field }) => (
                       <DatePicker
                         {...field}
-                        value={field.value || null}
                         label="Date of Birth (optional)"
+                        value={field.value ? dayjs(field.value) : null}
+                        onChange={(newValue) => {
+                          field.onChange(newValue ? newValue.format('YYYY-MM-DD') : null);
+                        }}
                         slotProps={{
                           textField: {
                             fullWidth: true,
                             margin: "normal",
+                            error: !!errors.dob,
+                            helperText: typeof errors.dob?.message === "string" ? errors.dob.message : undefined,
                           },
                         }}
                       />

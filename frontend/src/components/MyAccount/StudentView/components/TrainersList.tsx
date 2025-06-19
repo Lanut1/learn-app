@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { getUserTrainers, Trainer } from "../../../../services/trainers.service";
+import { SPECIALIZATION_LABELS } from "../../../Registration/RegistrationForm/utils";
 
 const TrainersList: React.FC = () => {
   const [trainers, setTrainers] = useState<Trainer[]>([]);
@@ -94,7 +95,7 @@ const TrainersList: React.FC = () => {
                 <TableCell sx={{ fontWeight: "bold" }}>
                   {trainer.name}
                 </TableCell>
-                <TableCell>{trainer.specialization}</TableCell>
+                <TableCell>{SPECIALIZATION_LABELS[trainer.specialization]}</TableCell>
               </TableRow>
             ))}
           </TableBody>

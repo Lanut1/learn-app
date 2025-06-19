@@ -120,6 +120,7 @@ const Header: React.FC = () => {
                 onLogout={logout}
                 username={currentUser?.username}
                 userAvatar={currentUser?.photo}
+                email={currentUser?.email}
               />
             ) : (
               <Box sx={{ ml: 2 }}>

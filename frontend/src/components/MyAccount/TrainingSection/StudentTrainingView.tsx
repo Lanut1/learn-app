@@ -31,20 +31,20 @@ const StudentTrainingView: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      setLoading(true);
-      const fetchTrainings = async () => {
+    const fetchTrainings = async () => {
+      try {
+        setLoading(true);
         const data = await getMyTrainings();
         setTrainings(data);
         setFilteredTrainings(data);
-      };
+      } catch (error) {
+        console.error("Failed to fetch trainings:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      fetchTrainings();
-    } catch (error) {
-      console.error("Failed to fetch trainings:", error);
-    } finally {
-      setLoading(false);
-    }
+    fetchTrainings();
   }, []);
 
   const handleSearch = () => {
@@ -69,16 +69,16 @@ const StudentTrainingView: React.FC = () => {
     if (fromDate) {
       result = result.filter(
         (training) =>
-          dayjs(training.date, "DD.MM.YYYY").isAfter(fromDate, "day") ||
-          dayjs(training.date, "DD.MM.YYYY").isSame(fromDate, "day"),
+          dayjs(training.date).isSame(fromDate, "day") ||
+          dayjs(training.date).isAfter(fromDate, "day")
       );
     }
 
     if (toDate) {
       result = result.filter(
         (training) =>
-          dayjs(training.date, "DD.MM.YYYY").isBefore(toDate, "day") ||
-          dayjs(training.date, "DD.MM.YYYY").isSame(toDate, "day"),
+          dayjs(training.date).isSame(toDate, "day") ||
+          dayjs(training.date).isBefore(toDate, "day")
       );
     }
 
@@ -128,7 +128,7 @@ const StudentTrainingView: React.FC = () => {
           <TextField
             value={specializationFilter}
             onChange={(e) => setSpecializationFilter(e.target.value)}
-            label="Specialization"
+            label="Training Name"
             variant="outlined"
             fullWidth
           />

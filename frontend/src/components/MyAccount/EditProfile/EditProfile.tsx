@@ -8,11 +8,12 @@ import {
   Alert,
   MenuItem,
   Paper,
+  Snackbar,
 } from "@mui/material";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { useForm, Controller } from "react-hook-form";
 import { DatePicker } from "@mui/x-date-pickers";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 
 import { UserData } from "../../../types/auth.types";
@@ -21,9 +22,12 @@ import FullPageLoader from "../../PageLoading/PageLoading";
 import { SPECIALIZATIONS } from "../../Registration/RegistrationForm/utils";
 import { useAuth } from "../../../context/authContext";
 import theme from "../../../theme";
+import { useState } from "react";
 
 const EditProfile = () => {
+   const [openSnackbar, setOpenSnackbar] = useState(false);
   const { loading, error, updateUserData, currentUser } = useAuth();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -50,9 +54,12 @@ const EditProfile = () => {
       (payloadForServer as any)[fieldName] = currentFormValues[fieldName];
     });
 
-    console.log(payloadForServer);
+    const updatedProfile = await updateUserData(payloadForServer);
 
-    await updateUserData(payloadForServer);
+    if (updatedProfile) {
+      setOpenSnackbar(true);
+      setTimeout(() => navigate("/my-account"), 1500);
+    }
   };
 
   const onInvalid = (validationErrors: any) => {
@@ -227,6 +234,16 @@ const EditProfile = () => {
           </Box>
         </Box>
       </form>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={1200}
+        onClose={() => setOpenSnackbar(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert elevation={6} variant="filled" severity="success">
+          Profile updated successfully!
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

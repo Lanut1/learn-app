@@ -12,16 +12,19 @@ import {
   Checkbox,
 } from "@mui/material";
 import { Trainer } from "../../../services/trainers.service";
+import { SPECIALIZATION_LABELS } from "../../Registration/RegistrationForm/utils";
 
 interface AllTrainersListProps {
   trainers: Trainer[];
   selectedTrainers: string[];
+  disabledTrainers: string[];
   onSelectTrainer: (id: string) => void;
 }
 
 const AllTrainersList: React.FC<AllTrainersListProps> = ({
   trainers,
   selectedTrainers,
+  disabledTrainers,
   onSelectTrainer,
 }) => {
   return (
@@ -53,12 +56,13 @@ const AllTrainersList: React.FC<AllTrainersListProps> = ({
                   <Checkbox
                     checked={selectedTrainers.includes(trainer.id)}
                     onChange={() => onSelectTrainer(trainer.id)}
+                    disabled={disabledTrainers.includes(trainer.id)}
                   />
                 </TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>
                   {trainer.name}
                 </TableCell>
-                <TableCell>{trainer.specialization}</TableCell>
+                <TableCell>{SPECIALIZATION_LABELS[trainer.specialization]}</TableCell>
               </TableRow>
             ))}
           </TableBody>
