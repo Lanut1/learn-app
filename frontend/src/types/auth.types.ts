@@ -40,7 +40,7 @@ export interface AuthContextType {
   login: (email: string, password: string) => Promise<UserData | undefined>;
   logout: () => Promise<void>;
   register: (userData: RegistrationData, role?: Role) => Promise<any>;
-  updateUserData: (newUserData: Partial<UserData>) => void;
+  updateUserData: (newUserData: Partial<UserData>) => Promise<UserData | undefined>;
   changePassword: (
     currentPassword: string,
     newPassword: string,

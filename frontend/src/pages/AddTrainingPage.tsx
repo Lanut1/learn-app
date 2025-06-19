@@ -175,7 +175,7 @@ const AddTrainingPage: React.FC = () => {
                   value={selectedTrainer}
                   getOptionLabel={(option) => option.name}
                   isOptionEqualToValue={(option, value) => option.id === value.id}
-                  onChange={(event, newValue) => setSelectedTrainer(newValue)}
+                  onChange={(_event, newValue) => setSelectedTrainer(newValue)}
                   renderInput={(params) => (
                     <TextField {...params} label="Trainer" />
                   )}
