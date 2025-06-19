@@ -15,16 +15,13 @@ export interface AuthResponse {
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const getUserProfile = async (): Promise<UserData> => {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No token found");
-
     const API_URL = `${BASE_URL}/auth/profile`;
     const response = await fetch(API_URL, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-        }
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include', 
     });
 
     if (!response.ok) {
@@ -36,13 +33,14 @@ export const getUserProfile = async (): Promise<UserData> => {
 export const loginUser = async (
   email: string,
   password: string,
-): Promise<AuthResponse> => {
+): Promise<UserData> => {
   const API_URL = `${BASE_URL}/auth/login`;
 
   const response = await fetch(API_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
+    credentials: 'include'
   });
 
   if (!response.ok) {
@@ -54,14 +52,26 @@ export const loginUser = async (
 };
 
 interface LogoutResponse {
-  success: boolean;
+  message: string;
 }
 
-//TODO: implement httponly cookies for token management
 export const logoutUser = async (): Promise<LogoutResponse> => {
   try {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    return { success: true };
+    const API_URL = `${BASE_URL}/auth/logout`;
+
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include', 
+    });
+
+    if (!response.ok) {
+      throw new Error('Logout failed on the server.');
+    }
+
+    return await response.json();
   } catch (error) {
     console.error("Logout error:", error);
     throw error;
@@ -79,6 +89,7 @@ export const registerUser = async (
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(userData),
+    credentials: 'include'
   });
 
   if (!response.ok) {
@@ -105,18 +116,15 @@ export const updatePassword = async (
   confirmPassword: string,
 ): Promise<UpdatePasswordResponse> => {
   try {
-    const token = localStorage.getItem('token');
-    if (!token) throw new Error('Not authenticated');
-
     const payload = { currentPassword, newPassword, confirmPassword };
     
     const response = await fetch(`${BASE_URL}/auth/profile/password`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(payload),
+      credentials: 'include'
     });
 
     if (!response.ok) {
@@ -131,43 +139,6 @@ export const updatePassword = async (
   }
 };
 
-export interface UploadUserPhotoRequest {
-  data: string;
-}
-
-export interface UploadUserPhotoResponse {
-  success: boolean;
-  photo: string;
-  message: string;
-}
-
-//TODO: Implement actual file upload logic
-export const uploadUserPhoto = async (
-  photoData: string,
-): Promise<UploadUserPhotoResponse> => {
-  try {
-    await new Promise((resolve) => setTimeout(resolve, 1200));
-
-    if (!photoData) {
-      const error: ApiError = {
-        status: 400,
-        message: "Photo data is required",
-        code: "MISSING_PHOTO_DATA",
-      };
-      throw error;
-    }
-
-    return {
-      success: true,
-      photo: `https://example.com/photos/${Date.now()}.jpg`,
-      message: "Photo uploaded successfully",
-    };
-  } catch (error) {
-    console.error("Error uploading user photo:", error);
-    throw error;
-  }
-};
-
 export interface DeleteUserAccountResponse {
   success: boolean;
   message: string;
@@ -176,14 +147,9 @@ export interface DeleteUserAccountResponse {
 export const deleteUserAccount =
   async (): Promise<DeleteUserAccountResponse> => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) throw new Error('Not authenticated');
-
       const response = await fetch(`${BASE_URL}/auth/profile`, {
         method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        credentials: 'include'
       })
 
       if (!response.ok) {
@@ -203,17 +169,13 @@ export const saveUserToServer = async (
   userData: Partial<UserData>,
 ): Promise<UserData> => {
   try {
-    const token = localStorage.getItem("token");
-
-    if (!token) throw new Error('Not authenticated');
-
     const response = await fetch(`${BASE_URL}/auth/profile`, {
       method: 'PATCH',
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(userData),
+      credentials: 'include'
     });
 
     if (!response.ok) {

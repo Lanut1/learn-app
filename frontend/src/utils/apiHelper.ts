@@ -3,23 +3,24 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000
 export const apiFetch = async (
   endpoint: string,
   options: RequestInit = {},
+  withCredentials: boolean = true
 ): Promise<any> => {
   try {
-    const token = localStorage.getItem('token');
-
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       ...(options.headers as Record<string, string>),
     };
 
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
-
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    const fetchOptions: RequestInit = {
       ...options,
       headers,
-    });
+    };
+
+    if (withCredentials) {
+      fetchOptions.credentials = 'include';
+    }
+
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, fetchOptions);
 
     if (!response.ok) {
       let errorMessage = `API Error: ${response.status} ${response.statusText}`;
