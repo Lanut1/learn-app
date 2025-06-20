@@ -19,6 +19,7 @@ export class AuthController {
 
     res.cookie('access_token', accessToken, {
       httpOnly: true,
+      path: '/',
       secure: process.env.NODE_ENV === 'production',
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 10)
@@ -36,6 +37,7 @@ export class AuthController {
 
     res.cookie('access_token', accessToken, {
       httpOnly: true,
+      path: '/',
       secure: process.env.NODE_ENV === 'production',
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 10)
@@ -46,7 +48,12 @@ export class AuthController {
 
   @Post('logout')
   logout(@Res({ passthrough: true }) res: Response) {
-    res.clearCookie('access_token');
+    res.clearCookie('access_token', {
+      httpOnly: true,
+      path: '/',
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    });
     return { message: 'Logged out successfully' };
   }
 
