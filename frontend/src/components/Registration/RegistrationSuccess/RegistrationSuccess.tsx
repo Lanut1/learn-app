@@ -1,8 +1,7 @@
 import React from "react";
 import { Avatar, Box, Button, Container, Typography } from "@mui/material";
 import { Check } from "@mui/icons-material";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { useAuth } from "../../../context/authContext";
+import { Link as RouterLink } from "react-router-dom";
 
 export interface SubmittedData {
   username: string;
@@ -17,19 +16,6 @@ interface SuccessRegistrationProps {
 const SuccessRegistration: React.FC<SuccessRegistrationProps> = ({
   submittedData,
 }) => {
-  const { login } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogin = async (event: React.MouseEvent) => {
-    event.preventDefault();
-    const response = await login(submittedData.email, submittedData.password);
-    if (response) {
-      navigate("/my-account");
-    } else {
-      console.error("Login failed");
-    }
-  };
-
   return (
     <Container
       sx={{
@@ -73,7 +59,6 @@ const SuccessRegistration: React.FC<SuccessRegistrationProps> = ({
       <Button
         component={RouterLink}
         to="/my-account"
-        onClick={handleLogin}
         variant="contained"
         size="large"
       >
