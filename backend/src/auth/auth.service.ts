@@ -1,13 +1,14 @@
 import { Injectable, ConflictException, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { RegisterUserDto } from './dto/register-user.dto';
-import { DynamodbService, UserItem } from 'src/dynamodb/dynamodb.service';
+import { DynamodbService } from 'src/dynamodb/dynamodb.service';
 import { randomUUID } from 'crypto';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/login-user.dto';
-import * as bcrypt from 'bcrypt';
 import { JwtPayload } from './auth.constants';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserItem } from 'src/dynamodb/dynamodb.types';
+import { PasswordService } from 'src/password/password.service';
 
 type AuthResponse = {
   accessToken: string;
@@ -19,6 +20,7 @@ export class AuthService {
   constructor(
     private readonly dynamodbService: DynamodbService,
     private readonly jwtService: JwtService,
+    private readonly passwordService: PasswordService,
   ) {}
 
   async getProfile(userId: string) {
@@ -36,7 +38,7 @@ export class AuthService {
     const { email, password } = loginDto;
     const user = await this.dynamodbService.getUserByEmail(email);
 
-    if (user && (await bcrypt.compare(password, user.hashedPassword))) {
+    if (user && (await this.passwordService.compare(password, user.hashedPassword))) {
       const { accessToken } = await this._signInToken(user.userId, user.email, user.role);
       const { hashedPassword, ...userProfile } = user;
       
@@ -53,8 +55,7 @@ export class AuthService {
     }
 
     const userId = randomUUID();
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(registerDto.password, saltRounds);
+    const hashedPassword = await this.passwordService.hash(registerDto.password);
 
     const newUserPayload = {
       userId: userId,
@@ -94,7 +95,7 @@ export class AuthService {
       throw new NotFoundException('User not found.');
     }
 
-    const isPasswordMatching = await bcrypt.compare(
+    const isPasswordMatching = await this.passwordService.compare(
       changePasswordDto.currentPassword,
       user.hashedPassword,
     );
@@ -103,8 +104,7 @@ export class AuthService {
       throw new UnauthorizedException('Current password is incorrect.');
     }
 
-    const saltRounds = 10;
-    const newHashedPassword = await bcrypt.hash(changePasswordDto.newPassword, saltRounds);
+    const newHashedPassword = await this.passwordService.hash(changePasswordDto.newPassword);
 
     await this.dynamodbService.updateUser(userId, {
       hashedPassword: newHashedPassword,

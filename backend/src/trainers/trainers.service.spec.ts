@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TrainersService } from './trainers.service';
 import { DynamodbService } from '../dynamodb/dynamodb.service';
-import { UserItem } from '../dynamodb/dynamodb.service';
+import { UserItem } from 'src/dynamodb/dynamodb.types';
 
 const mockDynamodbService = {
   getAllTrainers: jest.fn(),

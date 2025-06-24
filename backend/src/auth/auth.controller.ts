@@ -10,6 +10,24 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  private readonly commonCookieOptions = {
+    httpOnly: true,
+    path: '/',
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' as 'none' : 'lax' as 'lax',
+  };
+
+  private setTokenCookie(res: Response, accessToken: string) {
+    res.cookie('access_token', accessToken, {
+      ...this.commonCookieOptions,
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 10),
+    });
+  }
+
+  private clearTokenCookie(res: Response) {
+    res.clearCookie('access_token', this.commonCookieOptions);
+  }
+
   @Post('register')
   async register(
     @Body() registerUserDto: RegisterUserDto,
@@ -17,13 +35,7 @@ export class AuthController {
   ) {
     const { accessToken, user } = await this.authService.register(registerUserDto);
 
-    res.cookie('access_token', accessToken, {
-      httpOnly: true,
-      path: '/',
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 10)
-    });
+    this.setTokenCookie(res, accessToken);
 
     return { user };
   }
@@ -35,25 +47,14 @@ export class AuthController {
   ) {
     const { accessToken, user } = await this.authService.login(loginUserDto);
 
-    res.cookie('access_token', accessToken, {
-      httpOnly: true,
-      path: '/',
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 10)
-    });
+    this.setTokenCookie(res, accessToken);
 
     return { user };
   }
 
   @Post('logout')
   logout(@Res({ passthrough: true }) res: Response) {
-    res.clearCookie('access_token', {
-      httpOnly: true,
-      path: '/',
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    });
+    this.clearTokenCookie(res);
     return { message: 'Logged out successfully' };
   }
 

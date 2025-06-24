@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { RegisterUserDto } from './dto/register-user.dto';
-import { UserItem } from 'src/dynamodb/dynamodb.service';
+import { UserItem } from 'src/dynamodb/dynamodb.types';
 
 jest.mock('bcrypt');
 

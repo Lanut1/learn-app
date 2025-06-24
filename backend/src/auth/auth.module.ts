@@ -5,11 +5,13 @@ import { DynamodbModule } from 'src/dynamodb/dynamodb.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt-auth.strategy';
+import { PasswordModule } from 'src/password/password.module';
 
 @Module({
   imports: [
     DynamodbModule,
     ConfigModule,
+    PasswordModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
