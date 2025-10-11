@@ -2,7 +2,7 @@
 
 Learn Platform is a full-stack training management web application that allows users to register, log in, manage their profile, assign trainers, and manage trainings. The application is built with a NestJS backend using AWS DynamoDB and a React frontend using Vite and Material UI. The app is deployed using AWS Amplify, App Runner and integrates secure authentication with JWT and HTTP-only cookies.
 
-**Live Demo:** [https://main.d11d2jd4n93nmx.amplifyapp.com/](https://main.d11d2jd4n93nmx.amplifyapp.com/)
+**Live Demo:** https://www.loom.com/share/1e7881c435154ce69e3b7f393d3b3cf9
 
 ---
 
